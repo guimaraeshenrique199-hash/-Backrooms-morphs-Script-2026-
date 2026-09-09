@@ -29,8 +29,13 @@ local Coordinates = {
     {"🍌 TP BANANA", 13.87, 91.62, 97.03},
     {"🟣 TP CHAVE ROXA", 129.68, 233.67, 370.85},
     {"🟡 TP CHAVE AMARELA", -172.89, 83.14, 173.18},
+
     {"🪵 TP MADEIRA", 67.19, 75.56, 227.51},
     {"📦 TP CAIXA", 5.30, 93.72, 124.43},
+
+    -- NOVOS ITENS
+    {"⛽ TP GASOLINA", -106.63, 52.81, -13.99},
+    {"🔢 TP CÓDIGO 0242", -8.91, 95.75, -63.94},
 }
 
 --========================================================--
@@ -210,7 +215,7 @@ Padding.PaddingBottom = UDim.new(0, 12)
 Padding.Parent = Scroll
 
 --========================================================--
--- EFEITO AFUNDAR CORRIGIDO
+-- EFEITO AFUNDAR
 --========================================================--
 
 local function PressEffect(Button)
@@ -221,35 +226,19 @@ local function PressEffect(Button)
     Scale.Parent = Button
 
     local function PressDown()
-
         TweenService:Create(
             Scale,
-            TweenInfo.new(
-                0.07,
-                Enum.EasingStyle.Quad,
-                Enum.EasingDirection.Out
-            ),
-            {
-                Scale = 0.94
-            }
+            TweenInfo.new(0.07, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+            {Scale = 0.94}
         ):Play()
-
     end
 
     local function Release()
-
         TweenService:Create(
             Scale,
-            TweenInfo.new(
-                0.09,
-                Enum.EasingStyle.Back,
-                Enum.EasingDirection.Out
-            ),
-            {
-                Scale = 1
-            }
+            TweenInfo.new(0.09, Enum.EasingStyle.Back, Enum.EasingDirection.Out),
+            {Scale = 1}
         ):Play()
-
     end
 
     Button.InputBegan:Connect(function(Input)
@@ -270,9 +259,7 @@ local function PressEffect(Button)
         end
     end)
 
-    Button.MouseLeave:Connect(function()
-        Release()
-    end)
+    Button.MouseLeave:Connect(Release)
 end
 
 --========================================================--
@@ -360,7 +347,7 @@ local function TeleportAndInteract(X, Y, Z)
 end
 
 --========================================================--
--- BOTÕES DE COORDENADAS
+-- BOTÕES
 --========================================================--
 
 for Index, Data in ipairs(Coordinates) do
@@ -372,17 +359,12 @@ for Index, Data in ipairs(Coordinates) do
 
     Button.Size = UDim2.new(0, 138, 0, 50)
 
-    Button.BackgroundColor3 =
-        Color3.fromRGB(255, 255, 255)
-
+    Button.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
     Button.BackgroundTransparency = 0.65
-
     Button.BorderSizePixel = 0
 
     Button.Text = Data[1]
-    Button.TextColor3 =
-        Color3.fromRGB(20, 20, 20)
-
+    Button.TextColor3 = Color3.fromRGB(20, 20, 20)
     Button.TextSize = 16
     Button.Font = Enum.Font.SciFi
     Button.TextWrapped = true
@@ -390,7 +372,6 @@ for Index, Data in ipairs(Coordinates) do
     Button.AutoButtonColor = false
     Button.Active = true
     Button.Selectable = true
-
     Button.ZIndex = 25
     Button.Parent = Scroll
 
@@ -404,10 +385,8 @@ for Index, Data in ipairs(Coordinates) do
     Stroke.Transparency = 0.05
     Stroke.Parent = Button
 
-    -- EFEITO DE AFUNDAR
     PressEffect(Button)
 
-    -- TP
     Button.Activated:Connect(function()
 
         TeleportAndInteract(
@@ -429,17 +408,12 @@ Signature.Name = "Signature"
 Signature.Size = UDim2.new(1, -20, 0, 30)
 Signature.Position = UDim2.new(0, 10, 1, -38)
 Signature.BackgroundTransparency = 1
-
 Signature.Text = "🧱by henrique☢️"
-Signature.TextColor3 =
-    Color3.fromRGB(255, 255, 255)
-
+Signature.TextColor3 = Color3.fromRGB(255, 255, 255)
 Signature.TextTransparency = 0.05
 Signature.TextSize = 17
 Signature.Font = Enum.Font.SciFi
-Signature.TextXAlignment =
-    Enum.TextXAlignment.Right
-
+Signature.TextXAlignment = Enum.TextXAlignment.Right
 Signature.Active = false
 Signature.ZIndex = 25
 Signature.Parent = Main
@@ -455,7 +429,7 @@ Close.Activated:Connect(function()
 end)
 
 --========================================================--
--- GUI ARRASTÁVEL
+-- ARRASTAR GUI
 --========================================================--
 
 local Dragging = false
@@ -464,10 +438,8 @@ local StartPosition
 
 TopBar.InputBegan:Connect(function(Input)
 
-    if Input.UserInputType ==
-        Enum.UserInputType.MouseButton1
-        or Input.UserInputType ==
-        Enum.UserInputType.Touch then
+    if Input.UserInputType == Enum.UserInputType.MouseButton1
+        or Input.UserInputType == Enum.UserInputType.Touch then
 
         Dragging = true
         DragStart = Input.Position
@@ -475,9 +447,7 @@ TopBar.InputBegan:Connect(function(Input)
 
         Input.Changed:Connect(function()
 
-            if Input.UserInputState ==
-                Enum.UserInputState.End then
-
+            if Input.UserInputState == Enum.UserInputState.End then
                 Dragging = false
             end
         end)
@@ -490,18 +460,14 @@ UserInputService.InputChanged:Connect(function(Input)
         return
     end
 
-    if Input.UserInputType ==
-        Enum.UserInputType.MouseMovement
-        or Input.UserInputType ==
-        Enum.UserInputType.Touch then
+    if Input.UserInputType == Enum.UserInputType.MouseMovement
+        or Input.UserInputType == Enum.UserInputType.Touch then
 
-        local Delta =
-            Input.Position - DragStart
+        local Delta = Input.Position - DragStart
 
         Main.Position = UDim2.new(
             StartPosition.X.Scale,
             StartPosition.X.Offset + Delta.X,
-
             StartPosition.Y.Scale,
             StartPosition.Y.Offset + Delta.Y
         )
