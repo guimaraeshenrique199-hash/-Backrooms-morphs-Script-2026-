@@ -30,6 +30,7 @@ local Coordinates = {
     {"🟣 TP CHAVE ROXA", 129.68, 233.67, 370.85},
     {"🟡 TP CHAVE AMARELA", -172.89, 83.14, 173.18},
     {"🪵 TP MADEIRA", 67.19, 75.56, 227.51},
+    {"📦 TP CAIXA", 5.30, 93.72, 124.43},
 }
 
 --========================================================--
@@ -80,7 +81,6 @@ MainStroke.Parent = Main
 
 local Background = Instance.new("ImageLabel")
 Background.Name = "Background"
-Background.Parent = Main
 Background.Size = UDim2.new(1, 0, 1, 0)
 Background.Position = UDim2.new(0, 0, 0, 0)
 Background.BackgroundTransparency = 1
@@ -88,18 +88,23 @@ Background.BorderSizePixel = 0
 Background.Image = IMAGE_ID
 Background.ImageTransparency = 0.45
 Background.ScaleType = Enum.ScaleType.Crop
+Background.Active = false
 Background.ZIndex = 2
+Background.Parent = Main
 
 --========================================================--
--- CAMADA TRANSPARENTE
+-- OVERLAY
 --========================================================--
 
 local Overlay = Instance.new("Frame")
 Overlay.Name = "ImageOverlay"
 Overlay.Size = UDim2.new(1, 0, 1, 0)
+Overlay.Position = UDim2.new(0, 0, 0, 0)
 Overlay.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 Overlay.BackgroundTransparency = 0.78
 Overlay.BorderSizePixel = 0
+Overlay.Active = false
+Overlay.Selectable = false
 Overlay.ZIndex = 3
 Overlay.Parent = Main
 
@@ -115,7 +120,8 @@ local TopBar = Instance.new("Frame")
 TopBar.Name = "TopBar"
 TopBar.Size = UDim2.new(1, 0, 0, 62)
 TopBar.BackgroundTransparency = 1
-TopBar.ZIndex = 10
+TopBar.Active = true
+TopBar.ZIndex = 20
 TopBar.Parent = Main
 
 local Title = Instance.new("TextLabel")
@@ -127,7 +133,8 @@ Title.TextColor3 = Color3.fromRGB(255, 255, 255)
 Title.TextSize = 22
 Title.Font = Enum.Font.SciFi
 Title.TextXAlignment = Enum.TextXAlignment.Left
-Title.ZIndex = 11
+Title.Active = false
+Title.ZIndex = 21
 Title.Parent = TopBar
 
 local SubTitle = Instance.new("TextLabel")
@@ -139,11 +146,12 @@ SubTitle.TextColor3 = Color3.fromRGB(255, 255, 255)
 SubTitle.TextSize = 15
 SubTitle.Font = Enum.Font.SciFi
 SubTitle.TextXAlignment = Enum.TextXAlignment.Left
-SubTitle.ZIndex = 11
+SubTitle.Active = false
+SubTitle.ZIndex = 21
 SubTitle.Parent = TopBar
 
 --========================================================--
--- BOTÃO X VERMELHO
+-- BOTÃO X
 --========================================================--
 
 local Close = Instance.new("TextButton")
@@ -158,7 +166,7 @@ Close.TextColor3 = Color3.fromRGB(255, 255, 255)
 Close.TextSize = 20
 Close.Font = Enum.Font.SciFi
 Close.AutoButtonColor = false
-Close.ZIndex = 12
+Close.ZIndex = 22
 Close.Parent = TopBar
 
 local CloseCorner = Instance.new("UICorner")
@@ -184,7 +192,8 @@ Scroll.ScrollBarThickness = 5
 Scroll.ScrollBarImageColor3 = Color3.fromRGB(255, 255, 255)
 Scroll.AutomaticCanvasSize = Enum.AutomaticSize.Y
 Scroll.ScrollingDirection = Enum.ScrollingDirection.Y
-Scroll.ZIndex = 10
+Scroll.Active = true
+Scroll.ZIndex = 20
 Scroll.Parent = Main
 
 local Grid = Instance.new("UIGridLayout")
@@ -201,53 +210,69 @@ Padding.PaddingBottom = UDim.new(0, 12)
 Padding.Parent = Scroll
 
 --========================================================--
--- EFEITO AFUNDAR
+-- EFEITO AFUNDAR CORRIGIDO
 --========================================================--
 
 local function PressEffect(Button)
 
-    local OriginalSize = Button.Size
-    local OriginalPosition = Button.Position
+    local Scale = Instance.new("UIScale")
+    Scale.Name = "PressScale"
+    Scale.Scale = 1
+    Scale.Parent = Button
 
-    local function Normal()
+    local function PressDown()
 
         TweenService:Create(
-            Button,
-            TweenInfo.new(0.08, Enum.EasingStyle.Quad),
+            Scale,
+            TweenInfo.new(
+                0.07,
+                Enum.EasingStyle.Quad,
+                Enum.EasingDirection.Out
+            ),
             {
-                Size = OriginalSize,
-                Position = OriginalPosition
+                Scale = 0.94
             }
         ):Play()
 
     end
 
-    Button.MouseButton1Down:Connect(function()
+    local function Release()
 
         TweenService:Create(
-            Button,
-            TweenInfo.new(0.08, Enum.EasingStyle.Quad),
+            Scale,
+            TweenInfo.new(
+                0.09,
+                Enum.EasingStyle.Back,
+                Enum.EasingDirection.Out
+            ),
             {
-                Size = UDim2.new(
-                    OriginalSize.X.Scale,
-                    OriginalSize.X.Offset - 4,
-                    OriginalSize.Y.Scale,
-                    OriginalSize.Y.Offset - 4
-                ),
-
-                Position = UDim2.new(
-                    OriginalPosition.X.Scale,
-                    OriginalPosition.X.Offset + 2,
-                    OriginalPosition.Y.Scale,
-                    OriginalPosition.Y.Offset + 2
-                )
+                Scale = 1
             }
         ):Play()
 
+    end
+
+    Button.InputBegan:Connect(function(Input)
+
+        if Input.UserInputType == Enum.UserInputType.MouseButton1
+            or Input.UserInputType == Enum.UserInputType.Touch then
+
+            PressDown()
+        end
     end)
 
-    Button.MouseButton1Up:Connect(Normal)
-    Button.MouseLeave:Connect(Normal)
+    Button.InputEnded:Connect(function(Input)
+
+        if Input.UserInputType == Enum.UserInputType.MouseButton1
+            or Input.UserInputType == Enum.UserInputType.Touch then
+
+            Release()
+        end
+    end)
+
+    Button.MouseLeave:Connect(function()
+        Release()
+    end)
 end
 
 --========================================================--
@@ -274,7 +299,6 @@ local function ActivateNearbyPrompt(Root)
                     ClosestDistance = Distance
                     ClosestPrompt = Object
                 end
-
             end
         end
     end
@@ -336,7 +360,7 @@ local function TeleportAndInteract(X, Y, Z)
 end
 
 --========================================================--
--- BOTÕES DE TP
+-- BOTÕES DE COORDENADAS
 --========================================================--
 
 for Index, Data in ipairs(Coordinates) do
@@ -346,10 +370,11 @@ for Index, Data in ipairs(Coordinates) do
     Button.Name = "Coordinate_" .. Index
     Button.LayoutOrder = Index
 
+    Button.Size = UDim2.new(0, 138, 0, 50)
+
     Button.BackgroundColor3 =
         Color3.fromRGB(255, 255, 255)
 
-    -- MAIS TRANSPARENTE PARA MOSTRAR O FUNDO
     Button.BackgroundTransparency = 0.65
 
     Button.BorderSizePixel = 0
@@ -361,9 +386,12 @@ for Index, Data in ipairs(Coordinates) do
     Button.TextSize = 16
     Button.Font = Enum.Font.SciFi
     Button.TextWrapped = true
-    Button.AutoButtonColor = false
 
-    Button.ZIndex = 11
+    Button.AutoButtonColor = false
+    Button.Active = true
+    Button.Selectable = true
+
+    Button.ZIndex = 25
     Button.Parent = Scroll
 
     local Corner = Instance.new("UICorner")
@@ -376,9 +404,11 @@ for Index, Data in ipairs(Coordinates) do
     Stroke.Transparency = 0.05
     Stroke.Parent = Button
 
+    -- EFEITO DE AFUNDAR
     PressEffect(Button)
 
-    Button.MouseButton1Click:Connect(function()
+    -- TP
+    Button.Activated:Connect(function()
 
         TeleportAndInteract(
             Data[2],
@@ -390,7 +420,7 @@ for Index, Data in ipairs(Coordinates) do
 end
 
 --========================================================--
--- ASSINATURA NO GUI
+-- ASSINATURA
 --========================================================--
 
 local Signature = Instance.new("TextLabel")
@@ -401,22 +431,26 @@ Signature.Position = UDim2.new(0, 10, 1, -38)
 Signature.BackgroundTransparency = 1
 
 Signature.Text = "🧱by henrique☢️"
-Signature.TextColor3 = Color3.fromRGB(255, 255, 255)
+Signature.TextColor3 =
+    Color3.fromRGB(255, 255, 255)
+
 Signature.TextTransparency = 0.05
 Signature.TextSize = 17
 Signature.Font = Enum.Font.SciFi
-Signature.TextXAlignment = Enum.TextXAlignment.Right
+Signature.TextXAlignment =
+    Enum.TextXAlignment.Right
 
-Signature.ZIndex = 12
+Signature.Active = false
+Signature.ZIndex = 25
 Signature.Parent = Main
 
 --========================================================--
--- FECHAR GUI
+-- FECHAR
 --========================================================--
 
 PressEffect(Close)
 
-Close.MouseButton1Click:Connect(function()
+Close.Activated:Connect(function()
     Gui:Destroy()
 end)
 
@@ -430,8 +464,10 @@ local StartPosition
 
 TopBar.InputBegan:Connect(function(Input)
 
-    if Input.UserInputType == Enum.UserInputType.MouseButton1
-        or Input.UserInputType == Enum.UserInputType.Touch then
+    if Input.UserInputType ==
+        Enum.UserInputType.MouseButton1
+        or Input.UserInputType ==
+        Enum.UserInputType.Touch then
 
         Dragging = true
         DragStart = Input.Position
@@ -444,7 +480,6 @@ TopBar.InputBegan:Connect(function(Input)
 
                 Dragging = false
             end
-
         end)
     end
 end)
