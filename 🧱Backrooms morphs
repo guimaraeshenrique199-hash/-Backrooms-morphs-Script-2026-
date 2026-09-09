@@ -1,0 +1,480 @@
+--========================================================--
+--                 🧱Backrooms morphs
+--                    Script 2026❗️
+--                 🧱by henrique☢️
+--========================================================--
+
+local Players = game:GetService("Players")
+local UserInputService = game:GetService("UserInputService")
+local TweenService = game:GetService("TweenService")
+
+local Player = Players.LocalPlayer
+local PlayerGui = Player:WaitForChild("PlayerGui")
+
+--========================================================--
+-- CONFIGURAÇÕES
+--========================================================--
+
+local IMAGE_ID = "rbxassetid://109504313940886"
+
+local Coordinates = {
+    {"🔋 TP BATERIA", -41.95, 91.84, -71.76},
+    {"🔨 TP MARTELO 1", -85.52, 91.90, -138.92},
+    {"🔨 TP MARTELO 2", -38.97, 92.30, -213.84},
+    {"🐐 TP PEDE CABRA", -49.57, 95.42, -307.63},
+
+    {"🟢 TP CHAVE VERDE", 42.85, 94.75, -15.18},
+    {"🔴 TP CHAVE VERMELHA", 148.58, 68.83, -47.07},
+    {"🔵 TP CHAVE AZUL", 291.94, 182.34, 63.31},
+    {"🍌 TP BANANA", 13.87, 91.62, 97.03},
+    {"🟣 TP CHAVE ROXA", 129.68, 233.67, 370.85},
+    {"🟡 TP CHAVE AMARELA", -172.89, 83.14, 173.18},
+    {"🪵 TP MADEIRA", 67.19, 75.56, 227.51},
+}
+
+--========================================================--
+-- LIMPAR GUI ANTIGA
+--========================================================--
+
+local OldGui = PlayerGui:FindFirstChild("HenriqueCoordinates")
+
+if OldGui then
+    OldGui:Destroy()
+end
+
+--========================================================--
+-- GUI PRINCIPAL
+--========================================================--
+
+local Gui = Instance.new("ScreenGui")
+Gui.Name = "HenriqueCoordinates"
+Gui.ResetOnSpawn = false
+Gui.IgnoreGuiInset = true
+Gui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+Gui.Parent = PlayerGui
+
+local Main = Instance.new("Frame")
+Main.Name = "Main"
+Main.Size = UDim2.new(0, 310, 0, 380)
+Main.Position = UDim2.new(0, 25, 0.5, -190)
+Main.BackgroundColor3 = Color3.fromRGB(18, 18, 18)
+Main.BackgroundTransparency = 0.25
+Main.BorderSizePixel = 0
+Main.ClipsDescendants = true
+Main.ZIndex = 1
+Main.Parent = Gui
+
+local MainCorner = Instance.new("UICorner")
+MainCorner.CornerRadius = UDim.new(0, 12)
+MainCorner.Parent = Main
+
+local MainStroke = Instance.new("UIStroke")
+MainStroke.Color = Color3.fromRGB(255, 255, 255)
+MainStroke.Thickness = 2
+MainStroke.Transparency = 0.05
+MainStroke.Parent = Main
+
+--========================================================--
+-- IMAGEM DE FUNDO
+--========================================================--
+
+local Background = Instance.new("ImageLabel")
+Background.Name = "Background"
+Background.Parent = Main
+Background.Size = UDim2.new(1, 0, 1, 0)
+Background.Position = UDim2.new(0, 0, 0, 0)
+Background.BackgroundTransparency = 1
+Background.BorderSizePixel = 0
+Background.Image = IMAGE_ID
+Background.ImageTransparency = 0.45
+Background.ScaleType = Enum.ScaleType.Crop
+Background.ZIndex = 2
+
+--========================================================--
+-- CAMADA TRANSPARENTE
+--========================================================--
+
+local Overlay = Instance.new("Frame")
+Overlay.Name = "ImageOverlay"
+Overlay.Size = UDim2.new(1, 0, 1, 0)
+Overlay.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+Overlay.BackgroundTransparency = 0.78
+Overlay.BorderSizePixel = 0
+Overlay.ZIndex = 3
+Overlay.Parent = Main
+
+local OverlayCorner = Instance.new("UICorner")
+OverlayCorner.CornerRadius = UDim.new(0, 12)
+OverlayCorner.Parent = Overlay
+
+--========================================================--
+-- BARRA SUPERIOR
+--========================================================--
+
+local TopBar = Instance.new("Frame")
+TopBar.Name = "TopBar"
+TopBar.Size = UDim2.new(1, 0, 0, 62)
+TopBar.BackgroundTransparency = 1
+TopBar.ZIndex = 10
+TopBar.Parent = Main
+
+local Title = Instance.new("TextLabel")
+Title.Size = UDim2.new(1, -60, 0, 35)
+Title.Position = UDim2.new(0, 12, 0, 3)
+Title.BackgroundTransparency = 1
+Title.Text = "🧱Backrooms morphs"
+Title.TextColor3 = Color3.fromRGB(255, 255, 255)
+Title.TextSize = 22
+Title.Font = Enum.Font.SciFi
+Title.TextXAlignment = Enum.TextXAlignment.Left
+Title.ZIndex = 11
+Title.Parent = TopBar
+
+local SubTitle = Instance.new("TextLabel")
+SubTitle.Size = UDim2.new(1, -60, 0, 25)
+SubTitle.Position = UDim2.new(0, 13, 0, 34)
+SubTitle.BackgroundTransparency = 1
+SubTitle.Text = "Script 2026❗️"
+SubTitle.TextColor3 = Color3.fromRGB(255, 255, 255)
+SubTitle.TextSize = 15
+SubTitle.Font = Enum.Font.SciFi
+SubTitle.TextXAlignment = Enum.TextXAlignment.Left
+SubTitle.ZIndex = 11
+SubTitle.Parent = TopBar
+
+--========================================================--
+-- BOTÃO X VERMELHO
+--========================================================--
+
+local Close = Instance.new("TextButton")
+Close.Name = "Close"
+Close.Size = UDim2.new(0, 36, 0, 34)
+Close.Position = UDim2.new(1, -43, 0, 7)
+Close.BackgroundColor3 = Color3.fromRGB(220, 45, 45)
+Close.BackgroundTransparency = 0.18
+Close.BorderSizePixel = 0
+Close.Text = "X"
+Close.TextColor3 = Color3.fromRGB(255, 255, 255)
+Close.TextSize = 20
+Close.Font = Enum.Font.SciFi
+Close.AutoButtonColor = false
+Close.ZIndex = 12
+Close.Parent = TopBar
+
+local CloseCorner = Instance.new("UICorner")
+CloseCorner.CornerRadius = UDim.new(0, 8)
+CloseCorner.Parent = Close
+
+local CloseStroke = Instance.new("UIStroke")
+CloseStroke.Color = Color3.fromRGB(255, 255, 255)
+CloseStroke.Thickness = 1.5
+CloseStroke.Parent = Close
+
+--========================================================--
+-- LISTA ROLÁVEL
+--========================================================--
+
+local Scroll = Instance.new("ScrollingFrame")
+Scroll.Name = "CoordinateList"
+Scroll.Size = UDim2.new(1, -20, 1, -120)
+Scroll.Position = UDim2.new(0, 10, 0, 68)
+Scroll.BackgroundTransparency = 1
+Scroll.BorderSizePixel = 0
+Scroll.ScrollBarThickness = 5
+Scroll.ScrollBarImageColor3 = Color3.fromRGB(255, 255, 255)
+Scroll.AutomaticCanvasSize = Enum.AutomaticSize.Y
+Scroll.ScrollingDirection = Enum.ScrollingDirection.Y
+Scroll.ZIndex = 10
+Scroll.Parent = Main
+
+local Grid = Instance.new("UIGridLayout")
+Grid.CellSize = UDim2.new(0, 138, 0, 50)
+Grid.CellPadding = UDim2.new(0, 7, 0, 8)
+Grid.HorizontalAlignment = Enum.HorizontalAlignment.Center
+Grid.VerticalAlignment = Enum.VerticalAlignment.Top
+Grid.SortOrder = Enum.SortOrder.LayoutOrder
+Grid.Parent = Scroll
+
+local Padding = Instance.new("UIPadding")
+Padding.PaddingTop = UDim.new(0, 5)
+Padding.PaddingBottom = UDim.new(0, 12)
+Padding.Parent = Scroll
+
+--========================================================--
+-- EFEITO AFUNDAR
+--========================================================--
+
+local function PressEffect(Button)
+
+    local OriginalSize = Button.Size
+    local OriginalPosition = Button.Position
+
+    local function Normal()
+
+        TweenService:Create(
+            Button,
+            TweenInfo.new(0.08, Enum.EasingStyle.Quad),
+            {
+                Size = OriginalSize,
+                Position = OriginalPosition
+            }
+        ):Play()
+
+    end
+
+    Button.MouseButton1Down:Connect(function()
+
+        TweenService:Create(
+            Button,
+            TweenInfo.new(0.08, Enum.EasingStyle.Quad),
+            {
+                Size = UDim2.new(
+                    OriginalSize.X.Scale,
+                    OriginalSize.X.Offset - 4,
+                    OriginalSize.Y.Scale,
+                    OriginalSize.Y.Offset - 4
+                ),
+
+                Position = UDim2.new(
+                    OriginalPosition.X.Scale,
+                    OriginalPosition.X.Offset + 2,
+                    OriginalPosition.Y.Scale,
+                    OriginalPosition.Y.Offset + 2
+                )
+            }
+        ):Play()
+
+    end)
+
+    Button.MouseButton1Up:Connect(Normal)
+    Button.MouseLeave:Connect(Normal)
+end
+
+--========================================================--
+-- INTERAÇÃO
+--========================================================--
+
+local function ActivateNearbyPrompt(Root)
+
+    local ClosestPrompt = nil
+    local ClosestDistance = 12
+
+    for _, Object in ipairs(workspace:GetDescendants()) do
+
+        if Object:IsA("ProximityPrompt") then
+
+            local Part = Object.Parent
+
+            if Part and Part:IsA("BasePart") then
+
+                local Distance =
+                    (Part.Position - Root.Position).Magnitude
+
+                if Distance <= ClosestDistance then
+                    ClosestDistance = Distance
+                    ClosestPrompt = Object
+                end
+
+            end
+        end
+    end
+
+    if ClosestPrompt then
+
+        pcall(function()
+            fireproximityprompt(ClosestPrompt)
+        end)
+
+        return true
+    end
+
+    return false
+end
+
+--========================================================--
+-- TELEPORTE
+--========================================================--
+
+local Busy = false
+
+local function TeleportAndInteract(X, Y, Z)
+
+    if Busy then
+        return
+    end
+
+    local Character = Player.Character
+
+    if not Character then
+        return
+    end
+
+    local Root =
+        Character:FindFirstChild("HumanoidRootPart")
+
+    if not Root then
+        return
+    end
+
+    Busy = true
+
+    Root.CFrame = CFrame.new(X, Y, Z)
+
+    task.wait(0.15)
+
+    Root.CFrame =
+        CFrame.new(Root.Position) *
+        CFrame.Angles(math.rad(-90), 0, 0)
+
+    task.wait(0.15)
+
+    ActivateNearbyPrompt(Root)
+
+    task.wait(0.25)
+
+    Busy = false
+end
+
+--========================================================--
+-- BOTÕES DE TP
+--========================================================--
+
+for Index, Data in ipairs(Coordinates) do
+
+    local Button = Instance.new("TextButton")
+
+    Button.Name = "Coordinate_" .. Index
+    Button.LayoutOrder = Index
+
+    Button.BackgroundColor3 =
+        Color3.fromRGB(255, 255, 255)
+
+    -- MAIS TRANSPARENTE PARA MOSTRAR O FUNDO
+    Button.BackgroundTransparency = 0.65
+
+    Button.BorderSizePixel = 0
+
+    Button.Text = Data[1]
+    Button.TextColor3 =
+        Color3.fromRGB(20, 20, 20)
+
+    Button.TextSize = 16
+    Button.Font = Enum.Font.SciFi
+    Button.TextWrapped = true
+    Button.AutoButtonColor = false
+
+    Button.ZIndex = 11
+    Button.Parent = Scroll
+
+    local Corner = Instance.new("UICorner")
+    Corner.CornerRadius = UDim.new(0, 8)
+    Corner.Parent = Button
+
+    local Stroke = Instance.new("UIStroke")
+    Stroke.Color = Color3.fromRGB(255, 255, 255)
+    Stroke.Thickness = 1.5
+    Stroke.Transparency = 0.05
+    Stroke.Parent = Button
+
+    PressEffect(Button)
+
+    Button.MouseButton1Click:Connect(function()
+
+        TeleportAndInteract(
+            Data[2],
+            Data[3],
+            Data[4]
+        )
+
+    end)
+end
+
+--========================================================--
+-- ASSINATURA NO GUI
+--========================================================--
+
+local Signature = Instance.new("TextLabel")
+
+Signature.Name = "Signature"
+Signature.Size = UDim2.new(1, -20, 0, 30)
+Signature.Position = UDim2.new(0, 10, 1, -38)
+Signature.BackgroundTransparency = 1
+
+Signature.Text = "🧱by henrique☢️"
+Signature.TextColor3 = Color3.fromRGB(255, 255, 255)
+Signature.TextTransparency = 0.05
+Signature.TextSize = 17
+Signature.Font = Enum.Font.SciFi
+Signature.TextXAlignment = Enum.TextXAlignment.Right
+
+Signature.ZIndex = 12
+Signature.Parent = Main
+
+--========================================================--
+-- FECHAR GUI
+--========================================================--
+
+PressEffect(Close)
+
+Close.MouseButton1Click:Connect(function()
+    Gui:Destroy()
+end)
+
+--========================================================--
+-- GUI ARRASTÁVEL
+--========================================================--
+
+local Dragging = false
+local DragStart
+local StartPosition
+
+TopBar.InputBegan:Connect(function(Input)
+
+    if Input.UserInputType == Enum.UserInputType.MouseButton1
+        or Input.UserInputType == Enum.UserInputType.Touch then
+
+        Dragging = true
+        DragStart = Input.Position
+        StartPosition = Main.Position
+
+        Input.Changed:Connect(function()
+
+            if Input.UserInputState ==
+                Enum.UserInputState.End then
+
+                Dragging = false
+            end
+
+        end)
+    end
+end)
+
+UserInputService.InputChanged:Connect(function(Input)
+
+    if not Dragging then
+        return
+    end
+
+    if Input.UserInputType ==
+        Enum.UserInputType.MouseMovement
+        or Input.UserInputType ==
+        Enum.UserInputType.Touch then
+
+        local Delta =
+            Input.Position - DragStart
+
+        Main.Position = UDim2.new(
+            StartPosition.X.Scale,
+            StartPosition.X.Offset + Delta.X,
+
+            StartPosition.Y.Scale,
+            StartPosition.Y.Offset + Delta.Y
+        )
+    end
+end)
+
+--========================================================--
+--                 🧱Backrooms morphs
+--                    Script 2026❗️
+--                 🧱by henrique☢️
+--========================================================--
