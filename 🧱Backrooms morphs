@@ -7,6 +7,7 @@
 local Players = game:GetService("Players")
 local UserInputService = game:GetService("UserInputService")
 local TweenService = game:GetService("TweenService")
+local RunService = game:GetService("RunService")
 
 local Player = Players.LocalPlayer
 local PlayerGui = Player:WaitForChild("PlayerGui")
@@ -18,24 +19,23 @@ local PlayerGui = Player:WaitForChild("PlayerGui")
 local IMAGE_ID = "rbxassetid://109504313940886"
 
 local Coordinates = {
-    {"🔋 TP BATERIA", -41.95, 91.84, -71.76},
-    {"🔨 TP MARTELO 1", -85.52, 91.90, -138.92},
-    {"🔨 TP MARTELO 2", -38.97, 92.30, -213.84},
-    {"🐐 TP PEDE CABRA", -49.57, 95.42, -307.63},
+	{"🔋 TP BATERIA", -41.95, 91.84, -71.76},
+	{"🔨 TP MARTELO 1", -85.52, 91.90, -138.92},
+	{"🔨 TP MARTELO 2", -38.97, 92.30, -213.84},
+	{"🐐 TP PEDE CABRA", -49.57, 95.42, -307.63},
 
-    {"🟢 TP CHAVE VERDE", 42.85, 94.75, -15.18},
-    {"🔴 TP CHAVE VERMELHA", 148.58, 68.83, -47.07},
-    {"🔵 TP CHAVE AZUL", 291.94, 182.34, 63.31},
-    {"🍌 TP BANANA", 13.87, 91.62, 97.03},
-    {"🟣 TP CHAVE ROXA", 129.68, 233.67, 370.85},
-    {"🟡 TP CHAVE AMARELA", -172.89, 83.14, 173.18},
+	{"🟢 TP CHAVE VERDE", 42.85, 94.75, -15.18},
+	{"🔴 TP CHAVE VERMELHA", 148.58, 68.83, -47.07},
+	{"🔵 TP CHAVE AZUL", 291.94, 182.34, 63.31},
+	{"🍌 TP BANANA", 13.87, 91.62, 97.03},
+	{"🟣 TP CHAVE ROXA", 129.68, 233.67, 370.85},
+	{"🟡 TP CHAVE AMARELA", -172.89, 83.14, 173.18},
 
-    {"🪵 TP MADEIRA", 67.19, 75.56, 227.51},
-    {"📦 TP CAIXA", 5.30, 93.72, 124.43},
+	{"🪵 TP MADEIRA", 67.19, 75.56, 227.51},
+	{"📦 TP CAIXA", 5.30, 93.72, 124.43},
 
-    -- NOVOS ITENS
-    {"⛽ TP GASOLINA", -106.63, 52.81, -13.99},
-    {"🔢 TP CÓDIGO 0242", -8.91, 95.75, -63.94},
+	{"⛽ TP GASOLINA", -106.63, 52.81, -13.99},
+	{"🔢 TP CÓDIGO 0242", -8.91, 95.75, -63.94},
 }
 
 --========================================================--
@@ -45,7 +45,7 @@ local Coordinates = {
 local OldGui = PlayerGui:FindFirstChild("HenriqueCoordinates")
 
 if OldGui then
-    OldGui:Destroy()
+	OldGui:Destroy()
 end
 
 --========================================================--
@@ -61,8 +61,11 @@ Gui.Parent = PlayerGui
 
 local Main = Instance.new("Frame")
 Main.Name = "Main"
-Main.Size = UDim2.new(0, 310, 0, 380)
-Main.Position = UDim2.new(0, 25, 0.5, -190)
+
+-- AUMENTADA SÓ PARA CABER OS NOVOS BOTÕES
+Main.Size = UDim2.new(0, 310, 0, 450)
+Main.Position = UDim2.new(0, 25, 0.5, -225)
+
 Main.BackgroundColor3 = Color3.fromRGB(18, 18, 18)
 Main.BackgroundTransparency = 0.25
 Main.BorderSizePixel = 0
@@ -189,7 +192,7 @@ CloseStroke.Parent = Close
 
 local Scroll = Instance.new("ScrollingFrame")
 Scroll.Name = "CoordinateList"
-Scroll.Size = UDim2.new(1, -20, 1, -120)
+Scroll.Size = UDim2.new(1, -20, 1, -185)
 Scroll.Position = UDim2.new(0, 10, 0, 68)
 Scroll.BackgroundTransparency = 1
 Scroll.BorderSizePixel = 0
@@ -220,213 +223,759 @@ Padding.Parent = Scroll
 
 local function PressEffect(Button)
 
-    local Scale = Instance.new("UIScale")
-    Scale.Name = "PressScale"
-    Scale.Scale = 1
-    Scale.Parent = Button
+	local Scale = Instance.new("UIScale")
+	Scale.Name = "PressScale"
+	Scale.Scale = 1
+	Scale.Parent = Button
 
-    local function PressDown()
-        TweenService:Create(
-            Scale,
-            TweenInfo.new(0.07, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
-            {Scale = 0.94}
-        ):Play()
-    end
+	local function PressDown()
 
-    local function Release()
-        TweenService:Create(
-            Scale,
-            TweenInfo.new(0.09, Enum.EasingStyle.Back, Enum.EasingDirection.Out),
-            {Scale = 1}
-        ):Play()
-    end
+		TweenService:Create(
+			Scale,
+			TweenInfo.new(
+				0.07,
+				Enum.EasingStyle.Quad,
+				Enum.EasingDirection.Out
+			),
+			{Scale = 0.94}
+		):Play()
 
-    Button.InputBegan:Connect(function(Input)
+	end
 
-        if Input.UserInputType == Enum.UserInputType.MouseButton1
-            or Input.UserInputType == Enum.UserInputType.Touch then
+	local function Release()
 
-            PressDown()
-        end
-    end)
+		TweenService:Create(
+			Scale,
+			TweenInfo.new(
+				0.09,
+				Enum.EasingStyle.Back,
+				Enum.EasingDirection.Out
+			),
+			{Scale = 1}
+		):Play()
 
-    Button.InputEnded:Connect(function(Input)
+	end
 
-        if Input.UserInputType == Enum.UserInputType.MouseButton1
-            or Input.UserInputType == Enum.UserInputType.Touch then
+	Button.InputBegan:Connect(function(Input)
 
-            Release()
-        end
-    end)
+		if Input.UserInputType == Enum.UserInputType.MouseButton1
+			or Input.UserInputType == Enum.UserInputType.Touch then
 
-    Button.MouseLeave:Connect(Release)
+			PressDown()
+
+		end
+
+	end)
+
+	Button.InputEnded:Connect(function(Input)
+
+		if Input.UserInputType == Enum.UserInputType.MouseButton1
+			or Input.UserInputType == Enum.UserInputType.Touch then
+
+			Release()
+
+		end
+
+	end)
+
+	Button.MouseLeave:Connect(Release)
+
 end
 
 --========================================================--
--- INTERAÇÃO
+-- ENCONTRAR PROMPT
+--========================================================--
+
+local function GetPromptPart(Prompt)
+
+	if Prompt.Parent:IsA("Attachment") then
+
+		local Parent = Prompt.Parent.Parent
+
+		if Parent and Parent:IsA("BasePart") then
+			return Parent
+		end
+
+	end
+
+	if Prompt.Parent:IsA("BasePart") then
+		return Prompt.Parent
+	end
+
+	return nil
+end
+
+--========================================================--
+-- AUTO-CLICK DO PROMPT
+--========================================================--
+
+local function AutoClickPrompt(Prompt)
+
+	if not Prompt then
+		return false
+	end
+
+	if not Prompt.Enabled then
+		return false
+	end
+
+	local Success = pcall(function()
+
+		Prompt:InputHoldBegin()
+
+		task.wait(
+			math.max(
+				Prompt.HoldDuration,
+				0.08
+			)
+		)
+
+		Prompt:InputHoldEnd()
+
+	end)
+
+	return Success
+end
+
+--========================================================--
+-- INTERAÇÃO PRÓXIMA
 --========================================================--
 
 local function ActivateNearbyPrompt(Root)
 
-    local ClosestPrompt = nil
-    local ClosestDistance = 12
+	local ClosestPrompt = nil
+	local ClosestDistance = 12
 
-    for _, Object in ipairs(workspace:GetDescendants()) do
+	for _, Object in ipairs(workspace:GetDescendants()) do
 
-        if Object:IsA("ProximityPrompt") then
+		if Object:IsA("ProximityPrompt")
+			and Object.Enabled then
 
-            local Part = Object.Parent
+			local Part = GetPromptPart(Object)
 
-            if Part and Part:IsA("BasePart") then
+			if Part then
 
-                local Distance =
-                    (Part.Position - Root.Position).Magnitude
+				local Distance =
+					(Part.Position - Root.Position).Magnitude
 
-                if Distance <= ClosestDistance then
-                    ClosestDistance = Distance
-                    ClosestPrompt = Object
-                end
-            end
-        end
-    end
+				if Distance <= ClosestDistance then
 
-    if ClosestPrompt then
+					ClosestDistance = Distance
+					ClosestPrompt = Object
 
-        pcall(function()
-            fireproximityprompt(ClosestPrompt)
-        end)
+				end
 
-        return true
-    end
+			end
 
-    return false
+		end
+
+	end
+
+	if ClosestPrompt then
+
+		AutoClickPrompt(ClosestPrompt)
+
+		return true
+	end
+
+	return false
 end
 
 --========================================================--
--- TELEPORTE
+-- TELEPORTE INDIVIDUAL
 --========================================================--
 
 local Busy = false
 
 local function TeleportAndInteract(X, Y, Z)
 
-    if Busy then
-        return
-    end
+	if Busy then
+		return
+	end
 
-    local Character = Player.Character
+	local Character = Player.Character
 
-    if not Character then
-        return
-    end
+	if not Character then
+		return
+	end
 
-    local Root =
-        Character:FindFirstChild("HumanoidRootPart")
+	local Root =
+		Character:FindFirstChild("HumanoidRootPart")
 
-    if not Root then
-        return
-    end
+	if not Root then
+		return
+	end
 
-    Busy = true
+	Busy = true
 
-    Root.CFrame = CFrame.new(X, Y, Z)
+	Root.CFrame =
+		CFrame.new(X, Y, Z)
 
-    task.wait(0.15)
+	task.wait(0.15)
 
-    Root.CFrame =
-        CFrame.new(Root.Position) *
-        CFrame.Angles(math.rad(-90), 0, 0)
+	Root.CFrame =
+		CFrame.new(Root.Position) *
+		CFrame.Angles(math.rad(-90), 0, 0)
 
-    task.wait(0.15)
+	task.wait(0.15)
 
-    ActivateNearbyPrompt(Root)
+	-- AUTO-CLICK / PEGA SOZINHO
+	ActivateNearbyPrompt(Root)
 
-    task.wait(0.25)
+	task.wait(0.25)
 
-    Busy = false
+	Busy = false
+
 end
 
 --========================================================--
--- BOTÕES
+-- BOTÕES DOS TPs
 --========================================================--
 
 for Index, Data in ipairs(Coordinates) do
 
-    local Button = Instance.new("TextButton")
+	local Button = Instance.new("TextButton")
 
-    Button.Name = "Coordinate_" .. Index
-    Button.LayoutOrder = Index
+	Button.Name = "Coordinate_" .. Index
+	Button.LayoutOrder = Index
 
-    Button.Size = UDim2.new(0, 138, 0, 50)
+	Button.Size =
+		UDim2.new(0, 138, 0, 50)
 
-    Button.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-    Button.BackgroundTransparency = 0.65
-    Button.BorderSizePixel = 0
+	Button.BackgroundColor3 =
+		Color3.fromRGB(255, 255, 255)
 
-    Button.Text = Data[1]
-    Button.TextColor3 = Color3.fromRGB(20, 20, 20)
-    Button.TextSize = 16
-    Button.Font = Enum.Font.SciFi
-    Button.TextWrapped = true
+	Button.BackgroundTransparency = 0.65
+	Button.BorderSizePixel = 0
 
-    Button.AutoButtonColor = false
-    Button.Active = true
-    Button.Selectable = true
-    Button.ZIndex = 25
-    Button.Parent = Scroll
+	Button.Text = Data[1]
+	Button.TextColor3 =
+		Color3.fromRGB(20, 20, 20)
 
-    local Corner = Instance.new("UICorner")
-    Corner.CornerRadius = UDim.new(0, 8)
-    Corner.Parent = Button
+	Button.TextSize = 16
+	Button.Font = Enum.Font.SciFi
+	Button.TextWrapped = true
 
-    local Stroke = Instance.new("UIStroke")
-    Stroke.Color = Color3.fromRGB(255, 255, 255)
-    Stroke.Thickness = 1.5
-    Stroke.Transparency = 0.05
-    Stroke.Parent = Button
+	Button.AutoButtonColor = false
+	Button.Active = true
+	Button.Selectable = true
+	Button.ZIndex = 25
+	Button.Parent = Scroll
 
-    PressEffect(Button)
+	local Corner = Instance.new("UICorner")
+	Corner.CornerRadius =
+		UDim.new(0, 8)
+	Corner.Parent = Button
 
-    Button.Activated:Connect(function()
+	local Stroke = Instance.new("UIStroke")
+	Stroke.Color =
+		Color3.fromRGB(255, 255, 255)
 
-        TeleportAndInteract(
-            Data[2],
-            Data[3],
-            Data[4]
-        )
+	Stroke.Thickness = 1.5
+	Stroke.Transparency = 0.05
+	Stroke.Parent = Button
 
-    end)
+	PressEffect(Button)
+
+	Button.Activated:Connect(function()
+
+		TeleportAndInteract(
+			Data[2],
+			Data[3],
+			Data[4]
+		)
+
+	end)
+
 end
+
+--========================================================--
+-- BOTÕES INFERIORES
+--========================================================--
+
+local Bottom = Instance.new("Frame")
+Bottom.Name = "BottomControls"
+Bottom.Size = UDim2.new(1, -20, 0, 50)
+Bottom.Position = UDim2.new(0, 10, 1, -82)
+Bottom.BackgroundTransparency = 1
+Bottom.ZIndex = 30
+Bottom.Parent = Main
+
+local BottomLayout = Instance.new("UIListLayout")
+BottomLayout.FillDirection =
+	Enum.FillDirection.Horizontal
+
+BottomLayout.HorizontalAlignment =
+	Enum.HorizontalAlignment.Center
+
+BottomLayout.VerticalAlignment =
+	Enum.VerticalAlignment.Center
+
+BottomLayout.Padding =
+	UDim.new(0, 7)
+
+BottomLayout.Parent = Bottom
+
+--========================================================--
+-- TROFÉIS ON/OFF
+--========================================================--
+
+local TrophyOn = false
+
+local TrophyButton = Instance.new("TextButton")
+
+TrophyButton.Name = "TrophyButton"
+TrophyButton.Size =
+	UDim2.new(0, 138, 0, 50)
+
+TrophyButton.BackgroundColor3 =
+	Color3.fromRGB(255, 255, 255)
+
+TrophyButton.BackgroundTransparency = 0.65
+TrophyButton.BorderSizePixel = 0
+
+TrophyButton.Text =
+	"🏆 Troféis🏆 OFF"
+
+TrophyButton.TextColor3 =
+	Color3.fromRGB(20, 20, 20)
+
+TrophyButton.TextSize = 13
+TrophyButton.Font = Enum.Font.SciFi
+TrophyButton.AutoButtonColor = false
+TrophyButton.ZIndex = 31
+TrophyButton.Parent = Bottom
+
+local TrophyCorner = Instance.new("UICorner")
+TrophyCorner.CornerRadius =
+	UDim.new(0, 8)
+TrophyCorner.Parent = TrophyButton
+
+local TrophyStroke = Instance.new("UIStroke")
+TrophyStroke.Color =
+	Color3.fromRGB(255, 255, 255)
+
+TrophyStroke.Thickness = 1.5
+TrophyStroke.Parent = TrophyButton
+
+PressEffect(TrophyButton)
+
+--========================================================--
+-- TP TODOS OS TROFÉUS
+--========================================================--
+
+local TeleportingAll = false
+
+local AllButton = Instance.new("TextButton")
+
+AllButton.Name = "TeleportAllTrophies"
+AllButton.Size =
+	UDim2.new(0, 138, 0, 50)
+
+AllButton.BackgroundColor3 =
+	Color3.fromRGB(255, 255, 255)
+
+AllButton.BackgroundTransparency = 0.65
+AllButton.BorderSizePixel = 0
+
+AllButton.Text =
+	"🏆 TP TODOS OS TROFÉUS🏆"
+
+AllButton.TextColor3 =
+	Color3.fromRGB(20, 20, 20)
+
+AllButton.TextSize = 11
+AllButton.Font = Enum.Font.SciFi
+AllButton.TextWrapped = true
+
+AllButton.AutoButtonColor = false
+AllButton.Active = true
+AllButton.ZIndex = 31
+AllButton.Parent = Bottom
+
+local AllCorner = Instance.new("UICorner")
+AllCorner.CornerRadius =
+	UDim.new(0, 8)
+AllCorner.Parent = AllButton
+
+local AllStroke = Instance.new("UIStroke")
+AllStroke.Color =
+	Color3.fromRGB(255, 255, 255)
+
+AllStroke.Thickness = 1.5
+AllStroke.Parent = AllButton
+
+PressEffect(AllButton)
+
+--========================================================--
+-- PEGAR TODOS OS PROMPTS
+--========================================================--
+
+local function GetAllPrompts()
+
+	local List = {}
+
+	for _, Object in ipairs(workspace:GetDescendants()) do
+
+		if Object:IsA("ProximityPrompt")
+			and Object.Enabled then
+
+			local Part =
+				GetPromptPart(Object)
+
+			if Part then
+
+				table.insert(
+					List,
+					{
+						Prompt = Object,
+						Part = Part
+					}
+				)
+
+			end
+
+		end
+
+	end
+
+	return List
+end
+
+--========================================================--
+-- TP TODOS + AUTO-CLICK
+--========================================================--
+
+AllButton.Activated:Connect(function()
+
+	-- PARAR
+	if TeleportingAll then
+
+		TeleportingAll = false
+
+		AllButton.Text =
+			"🏆 TP TODOS OS TROFÉUS🏆"
+
+		return
+	end
+
+	-- INICIAR
+	TeleportingAll = true
+
+	AllButton.Text =
+		"⏳ TELEPORTANDO..."
+
+	task.spawn(function()
+
+		local Prompts =
+			GetAllPrompts()
+
+		for _, Data in ipairs(Prompts) do
+
+			-- PAROU
+			if not TeleportingAll then
+				break
+			end
+
+			local Character =
+				Player.Character
+
+			local Root =
+				Character and
+				Character:FindFirstChild(
+					"HumanoidRootPart"
+				)
+
+			if not Root then
+				break
+			end
+
+			-- TP
+			Root.CFrame =
+				Data.Part.CFrame *
+				CFrame.new(0, 3, 0)
+
+			task.wait(0.15)
+
+			-- OLHA PARA BAIXO, IGUAL AOS TPs NORMAIS
+			Root.CFrame =
+				CFrame.new(Root.Position) *
+				CFrame.Angles(
+					math.rad(-90),
+					0,
+					0
+				)
+
+			task.wait(0.15)
+
+			-- AUTO-CLICK
+			if TeleportingAll then
+
+				AutoClickPrompt(
+					Data.Prompt
+				)
+
+			end
+
+			task.wait(0.35)
+
+		end
+
+		TeleportingAll = false
+
+		if AllButton.Parent then
+
+			AllButton.Text =
+				"🏆 TP TODOS OS TROFÉUS🏆"
+
+		end
+
+	end)
+
+end)
+
+--========================================================--
+-- INDICADORES
+--========================================================--
+
+local TrophyFolder = Instance.new("Folder")
+TrophyFolder.Name = "PromptIndicators"
+TrophyFolder.Parent = Gui
+
+local function CreateIndicator(Prompt)
+
+	local ID = Prompt:GetDebugId()
+
+	if TrophyFolder:FindFirstChild(ID) then
+		return
+	end
+
+	local Part =
+		GetPromptPart(Prompt)
+
+	if not Part then
+		return
+	end
+
+	local Billboard =
+		Instance.new("BillboardGui")
+
+	Billboard.Name = ID
+	Billboard.Adornee = Part
+
+	Billboard.Size =
+		UDim2.new(0, 150, 0, 45)
+
+	Billboard.StudsOffset =
+		Vector3.new(0, 3, 0)
+
+	Billboard.AlwaysOnTop = true
+	Billboard.MaxDistance = math.huge
+	Billboard.Parent = TrophyFolder
+
+	local Label =
+		Instance.new("TextLabel")
+
+	Label.Size =
+		UDim2.new(1, 0, 1, 0)
+
+	Label.BackgroundColor3 =
+		Color3.fromRGB(20, 20, 20)
+
+	Label.BackgroundTransparency = 0.25
+
+	Label.TextColor3 =
+		Color3.fromRGB(255, 255, 255)
+
+	Label.TextSize = 17
+	Label.Font = Enum.Font.SciFi
+	Label.TextStrokeTransparency = 0
+	Label.Text = "E • 0m"
+	Label.Parent = Billboard
+
+	local Corner =
+		Instance.new("UICorner")
+
+	Corner.CornerRadius =
+		UDim.new(0, 8)
+
+	Corner.Parent = Label
+
+	local Stroke =
+		Instance.new("UIStroke")
+
+	Stroke.Color =
+		Color3.fromRGB(255, 255, 255)
+
+	Stroke.Thickness = 1.5
+	Stroke.Parent = Label
+
+end
+
+local function UpdateIndicators()
+
+	if not TrophyOn then
+
+		for _, Object in
+			ipairs(TrophyFolder:GetChildren()) do
+
+			Object:Destroy()
+
+		end
+
+		return
+	end
+
+	local Existing = {}
+
+	for _, Object in
+		ipairs(workspace:GetDescendants()) do
+
+		if Object:IsA("ProximityPrompt")
+			and Object.Enabled then
+
+			local ID =
+				Object:GetDebugId()
+
+			Existing[ID] = true
+
+			CreateIndicator(Object)
+
+			local Part =
+				GetPromptPart(Object)
+
+			local Billboard =
+				TrophyFolder:FindFirstChild(ID)
+
+			local Character =
+				Player.Character
+
+			local Root =
+				Character and
+				Character:FindFirstChild(
+					"HumanoidRootPart"
+				)
+
+			if Part and Root and Billboard then
+
+				local Distance =
+					(Part.Position -
+					Root.Position).Magnitude
+
+				local Label =
+					Billboard:
+					FindFirstChildOfClass(
+						"TextLabel"
+					)
+
+				if Label then
+
+					local Icon
+
+					if UserInputService.TouchEnabled then
+						Icon = "🖐️"
+					else
+						Icon = "E"
+					end
+
+					Label.Text =
+						Icon ..
+						" • " ..
+						math.floor(Distance) ..
+						"m"
+
+				end
+
+			end
+
+		end
+
+	end
+
+	for _, Object in
+		ipairs(TrophyFolder:GetChildren()) do
+
+		if not Existing[Object.Name] then
+			Object:Destroy()
+		end
+
+	end
+
+end
+
+--========================================================--
+-- TROFÉIS ON/OFF
+--========================================================--
+
+TrophyButton.Activated:Connect(function()
+
+	TrophyOn = not TrophyOn
+
+	if TrophyOn then
+
+		TrophyButton.Text =
+			"🏆 Troféis🏆 ON"
+
+	else
+
+		TrophyButton.Text =
+			"🏆 Troféis🏆 OFF"
+
+	end
+
+	UpdateIndicators()
+
+end)
+
+--========================================================--
+-- ATUALIZAÇÃO
+--========================================================--
+
+local IndicatorConnection
+
+IndicatorConnection =
+	RunService.RenderStepped:Connect(function()
+
+		if TrophyOn then
+			UpdateIndicators()
+		end
+
+	end)
 
 --========================================================--
 -- ASSINATURA
 --========================================================--
 
-local Signature = Instance.new("TextLabel")
+local Signature =
+	Instance.new("TextLabel")
 
 Signature.Name = "Signature"
-Signature.Size = UDim2.new(1, -20, 0, 30)
-Signature.Position = UDim2.new(0, 10, 1, -38)
+
+Signature.Size =
+	UDim2.new(1, -20, 0, 30)
+
+Signature.Position =
+	UDim2.new(0, 10, 1, -38)
+
 Signature.BackgroundTransparency = 1
-Signature.Text = "🧱by henrique☢️"
-Signature.TextColor3 = Color3.fromRGB(255, 255, 255)
+
+Signature.Text =
+	"🧱by henrique☢️"
+
+Signature.TextColor3 =
+	Color3.fromRGB(255, 255, 255)
+
 Signature.TextTransparency = 0.05
+
 Signature.TextSize = 17
 Signature.Font = Enum.Font.SciFi
-Signature.TextXAlignment = Enum.TextXAlignment.Right
+
+Signature.TextXAlignment =
+	Enum.TextXAlignment.Right
+
 Signature.Active = false
 Signature.ZIndex = 25
 Signature.Parent = Main
-
---========================================================--
--- FECHAR
---========================================================--
-
-PressEffect(Close)
-
-Close.Activated:Connect(function()
-    Gui:Destroy()
-end)
 
 --========================================================--
 -- ARRASTAR GUI
@@ -438,44 +987,77 @@ local StartPosition
 
 TopBar.InputBegan:Connect(function(Input)
 
-    if Input.UserInputType == Enum.UserInputType.MouseButton1
-        or Input.UserInputType == Enum.UserInputType.Touch then
+	if Input.UserInputType ==
+		Enum.UserInputType.MouseButton1
 
-        Dragging = true
-        DragStart = Input.Position
-        StartPosition = Main.Position
+		or Input.UserInputType ==
+		Enum.UserInputType.Touch then
 
-        Input.Changed:Connect(function()
+		Dragging = true
+		DragStart = Input.Position
+		StartPosition = Main.Position
 
-            if Input.UserInputState == Enum.UserInputState.End then
-                Dragging = false
-            end
-        end)
-    end
+		Input.Changed:Connect(function()
+
+			if Input.UserInputState ==
+				Enum.UserInputState.End then
+
+				Dragging = false
+
+			end
+
+		end)
+
+	end
+
 end)
 
 UserInputService.InputChanged:Connect(function(Input)
 
-    if not Dragging then
-        return
-    end
+	if not Dragging then
+		return
+	end
 
-    if Input.UserInputType == Enum.UserInputType.MouseMovement
-        or Input.UserInputType == Enum.UserInputType.Touch then
+	if Input.UserInputType ==
+		Enum.UserInputType.MouseMovement
 
-        local Delta = Input.Position - DragStart
+		or Input.UserInputType ==
+		Enum.UserInputType.Touch then
 
-        Main.Position = UDim2.new(
-            StartPosition.X.Scale,
-            StartPosition.X.Offset + Delta.X,
-            StartPosition.Y.Scale,
-            StartPosition.Y.Offset + Delta.Y
-        )
-    end
+		local Delta =
+			Input.Position - DragStart
+
+		Main.Position =
+			UDim2.new(
+				StartPosition.X.Scale,
+				StartPosition.X.Offset + Delta.X,
+				StartPosition.Y.Scale,
+				StartPosition.Y.Offset + Delta.Y
+			)
+
+	end
+
 end)
 
 --========================================================--
---                 🧱Backrooms morphs
---                    Script 2026❗️
---                 🧱by henrique☢️
+-- FECHAR
+--========================================================--
+
+PressEffect(Close)
+
+Close.Activated:Connect(function()
+
+	TeleportingAll = false
+
+	if IndicatorConnection then
+		IndicatorConnection:Disconnect()
+	end
+
+	TrophyFolder:Destroy()
+	Gui:Destroy()
+
+end)
+
+--========================================================--
+-- FIM
 --========================================================--
