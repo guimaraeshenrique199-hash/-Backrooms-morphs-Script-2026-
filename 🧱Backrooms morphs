@@ -3,6 +3,9 @@
 --                    Script 2026❗️
 --                    🎵by henrique🎵
 --========================================================--
+-- ESTE É O PRIMEIRO SCRIPT DO BANNER.
+-- O SCRIPT PRINCIPAL FICA ABAIXO DESTE.
+--========================================================--
 
 local Players = game:GetService("Players")
 local TweenService = game:GetService("TweenService")
@@ -12,27 +15,27 @@ local Player = Players.LocalPlayer
 local PlayerGui = Player:WaitForChild("PlayerGui")
 
 --========================================================--
--- CONFIGURAÇÕES
+-- CONFIGURAÇÕES DA INTRO
 --========================================================--
 
 local MUSIC_ID = "rbxassetid://1839246711"
 local IMAGE_ID = "rbxassetid://129676103296599"
 
--- Tempo que a intro fica parada
-local HOLD_TIME = 2.5
-
--- Duração da animação final
-local ANIMATION_TIME = 2.5
+local HOLD_TIME = 4
+local ANIMATION_TIME = 2.8
+local MUSIC_TIME = 15
+local MUSIC_VOLUME = 0.35
 
 --========================================================--
--- GUI
+-- GUI DA INTRO
 --========================================================--
 
-local Gui = Instance.new("ScreenGui")
-Gui.Name = "HenriqueIntro"
-Gui.ResetOnSpawn = false
-Gui.IgnoreGuiInset = true
-Gui.Parent = PlayerGui
+local IntroGui = Instance.new("ScreenGui")
+IntroGui.Name = "HenriqueIntro"
+IntroGui.ResetOnSpawn = false
+IntroGui.IgnoreGuiInset = true
+IntroGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+IntroGui.Parent = PlayerGui
 
 --========================================================--
 -- TEXTO
@@ -40,11 +43,11 @@ Gui.Parent = PlayerGui
 
 local Text = Instance.new("TextLabel")
 Text.Name = "ByHenrique"
-Text.Parent = Gui
+Text.Parent = IntroGui
 
 Text.AnchorPoint = Vector2.new(0.5, 0.5)
-Text.Position = UDim2.new(0.5, 0, 0.42, 0)
-Text.Size = UDim2.new(0.9, 0, 0, 90)
+Text.Position = UDim2.new(0.5, 0, 0.40, 0)
+Text.Size = UDim2.new(0.9, 0, 0, 100)
 
 Text.BackgroundTransparency = 1
 
@@ -67,10 +70,10 @@ Text.ZIndex = 10
 
 local Image = Instance.new("ImageLabel")
 Image.Name = "HenriqueImage"
-Image.Parent = Gui
+Image.Parent = IntroGui
 
 Image.AnchorPoint = Vector2.new(0.5, 0.5)
-Image.Position = UDim2.new(0.5, 0, 0.56, 0)
+Image.Position = UDim2.new(0.5, 0, 0.62, 0)
 Image.Size = UDim2.new(0, 100, 0, 100)
 
 Image.BackgroundTransparency = 1
@@ -87,131 +90,132 @@ Image.ZIndex = 10
 local Music = Instance.new("Sound")
 Music.Name = "HenriqueIntroMusic"
 Music.SoundId = MUSIC_ID
-Music.Volume = 0.6
+Music.Volume = MUSIC_VOLUME
 Music.Looped = false
 Music.Parent = SoundService
 
 Music:Play()
 
+task.delay(MUSIC_TIME, function()
+if Music and Music.Parent then
+Music:Stop()
+end
+end)
+
 --========================================================--
--- TEMPO INICIAL
+-- ANIMAÇÃO
 --========================================================--
 
 task.wait(HOLD_TIME)
 
---========================================================--
--- ANIMAÇÃO DO TEXTO
--- Sobe e desaparece
---========================================================--
-
-local TextEndPosition = UDim2.new(
-	0.5,
-	0,
-	0.42,
-	-130
-)
-
 local TextTween = TweenService:Create(
-	Text,
-	TweenInfo.new(
-		ANIMATION_TIME,
-		Enum.EasingStyle.Quint,
-		Enum.EasingDirection.Out
-	),
-	{
-		Position = TextEndPosition,
-		TextTransparency = 1,
-		TextStrokeTransparency = 1
-	}
-)
+Text,
+TweenInfo.new(
+ANIMATION_TIME,
+Enum.EasingStyle.Quint,
+Enum.EasingDirection.Out
+),
+{
+Position = UDim2.new(
+0.5,
+0,
+0.40,
+-140
+),
 
---========================================================--
--- ANIMAÇÃO DA IMAGEM
--- Gira + diminui + desaparece
---========================================================--
+TextTransparency = 1,  
+	TextStrokeTransparency = 1  
+}
+
+)
 
 local ImageTween = TweenService:Create(
-	Image,
-	TweenInfo.new(
-		ANIMATION_TIME,
-		Enum.EasingStyle.Quint,
-		Enum.EasingDirection.InOut
-	),
-	{
-		Size = UDim2.new(0, 0, 0, 0),
-		ImageTransparency = 1,
-		Rotation = 360
-	}
+Image,
+TweenInfo.new(
+ANIMATION_TIME,
+Enum.EasingStyle.Quint,
+Enum.EasingDirection.InOut
+),
+{
+Size = UDim2.new(0, 0, 0, 0),
+ImageTransparency = 1,
+Rotation = 360
+}
 )
 
 TextTween:Play()
 ImageTween:Play()
 
---========================================================--
--- FINALIZAÇÃO
---========================================================--
-
 ImageTween.Completed:Wait()
 
-if Gui then
-	Gui:Destroy()
+IntroGui:Destroy()
+
+if Music and Music.Parent then
+Music:Destroy()
 end
 
--- A música continua somente até o próprio áudio terminar.
--- Não existe Loop.
-
-Music.Ended:Connect(function()
-	if Music and Music.Parent then
-		Music:Destroy()
-	end
-end)
-
--- Segurança para limpar o áudio caso necessário
-task.delay(10, function()
-	if Music and Music.Parent then
-		Music:Destroy()
-	end
-end)
-
-
 --========================================================--
---                 🧱Backrooms morphs
---                    Script 2026❗️
---                 🧱by henrique☢️
+--              🧱 BACKROOMS MORPHS
+--                 SCRIPT 2026❗️
+--              🧱 by henrique ☢️
 --========================================================--
 
-local Players = game:GetService("Players")
 local UserInputService = game:GetService("UserInputService")
-local TweenService = game:GetService("TweenService")
 local RunService = game:GetService("RunService")
-
-local Player = Players.LocalPlayer
-local PlayerGui = Player:WaitForChild("PlayerGui")
 
 --========================================================--
 -- CONFIGURAÇÕES
 --========================================================--
 
-local IMAGE_ID = "rbxassetid://109504313940886"
+local IMAGE_ID_MAIN = "rbxassetid://109504313940886"
 
 local Coordinates = {
-	{"🔋 TP BATERIA", -41.95, 91.84, -71.76},
-	{"🔨 TP MARTELO 1", -85.52, 91.90, -138.92},
-	{"🔨 TP MARTELO 2", -38.97, 92.30, -213.84},
-	{"🐐 TP PEDE CABRA", -49.57, 95.42, -307.63},
 
-	{"🟢 TP CHAVE VERDE", 42.85, 94.75, -15.18},
-	{"🔴 TP CHAVE VERMELHA", 148.58, 68.83, -47.07},
-	{"🔵 TP CHAVE AZUL", 291.94, 182.34, 63.31},
-	{"🍌 TP BANANA", 13.87, 91.62, 97.03},
-	{"🟣 TP CHAVE ROXA", 129.68, 233.67, 370.85},
-	{"🟡 TP CHAVE AMARELA", -172.89, 83.14, 173.18},
+{"🔋 TP BATERIA",  
+	-41.95, 91.84, -71.76},  
 
-	{"🪵 TP MADEIRA", 67.19, 75.56, 227.51},
-	{"📦 TP CAIXA", 5.30, 93.72, 124.43},
+{"🔨 TP MARTELO 1",  
+	-85.52, 91.90, -138.92},  
 
-	{"⛽ TP GASOLINA", -106.63, 52.81, -13.99},
-	{"🔢 TP CÓDIGO 0242", -8.91, 95.75, -63.94},
+{"🔨 TP MARTELO 2",  
+	-38.97, 92.30, -213.84},  
+
+{"🐐 TP PEDE CABRA",  
+	-49.57, 95.42, -307.63},  
+
+{"🟢 TP CHAVE VERDE",  
+	42.85, 94.75, -15.18},  
+
+{"🔴 TP CHAVE VERMELHA",  
+	148.58, 68.83, -47.07},  
+
+{"🔵 TP CHAVE AZUL",  
+	291.94, 182.34, 63.31},  
+
+{"🍌 TP BANANA",  
+	13.87, 91.62, 97.03},  
+
+{"🟣 TP CHAVE ROXA",  
+	129.68, 233.67, 370.85},  
+
+{"🟡 TP CHAVE AMARELA",  
+	-172.89, 83.14, 173.18},  
+
+{"🪵 TP MADEIRA",  
+	67.19, 75.56, 227.51},  
+
+{"📦 TP CAIXA",  
+	5.30, 93.72, 124.43},  
+
+{"⛽ TP GASOLINA",  
+	-106.63, 52.81, -13.99},  
+
+{"🔢 TP CÓDIGO 0242",  
+	-8.91, 95.75, -63.94},  
+
+{"💣 TP TNT",  
+	-101.76, 29.63, -4.21},
+
 }
 
 --========================================================--
@@ -221,7 +225,7 @@ local Coordinates = {
 local OldGui = PlayerGui:FindFirstChild("HenriqueCoordinates")
 
 if OldGui then
-	OldGui:Destroy()
+OldGui:Destroy()
 end
 
 --========================================================--
@@ -229,6 +233,7 @@ end
 --========================================================--
 
 local Gui = Instance.new("ScreenGui")
+
 Gui.Name = "HenriqueCoordinates"
 Gui.ResetOnSpawn = false
 Gui.IgnoreGuiInset = true
@@ -236,13 +241,26 @@ Gui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 Gui.Parent = PlayerGui
 
 local Main = Instance.new("Frame")
+
 Main.Name = "Main"
 
--- AUMENTADA SÓ PARA CABER OS NOVOS BOTÕES
-Main.Size = UDim2.new(0, 310, 0, 450)
-Main.Position = UDim2.new(0, 25, 0.5, -225)
+Main.Size = UDim2.new(
+0,
+310,
+0,
+450
+)
 
-Main.BackgroundColor3 = Color3.fromRGB(18, 18, 18)
+Main.Position = UDim2.new(
+0,
+25,
+0.5,
+-225
+)
+
+Main.BackgroundColor3 =
+Color3.fromRGB(18, 18, 18)
+
 Main.BackgroundTransparency = 0.25
 Main.BorderSizePixel = 0
 Main.ClipsDescendants = true
@@ -260,31 +278,37 @@ MainStroke.Transparency = 0.05
 MainStroke.Parent = Main
 
 --========================================================--
--- IMAGEM DE FUNDO
+-- FUNDO
 --========================================================--
 
 local Background = Instance.new("ImageLabel")
+
 Background.Name = "Background"
-Background.Size = UDim2.new(1, 0, 1, 0)
-Background.Position = UDim2.new(0, 0, 0, 0)
+
+Background.Size =
+UDim2.new(1, 0, 1, 0)
+
 Background.BackgroundTransparency = 1
 Background.BorderSizePixel = 0
-Background.Image = IMAGE_ID
+
+Background.Image = IMAGE_ID_MAIN
 Background.ImageTransparency = 0.45
+
 Background.ScaleType = Enum.ScaleType.Crop
 Background.Active = false
 Background.ZIndex = 2
 Background.Parent = Main
 
---========================================================--
--- OVERLAY
---========================================================--
-
 local Overlay = Instance.new("Frame")
+
 Overlay.Name = "ImageOverlay"
-Overlay.Size = UDim2.new(1, 0, 1, 0)
-Overlay.Position = UDim2.new(0, 0, 0, 0)
-Overlay.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+
+Overlay.Size =
+UDim2.new(1, 0, 1, 0)
+
+Overlay.BackgroundColor3 =
+Color3.fromRGB(0, 0, 0)
+
 Overlay.BackgroundTransparency = 0.78
 Overlay.BorderSizePixel = 0
 Overlay.Active = false
@@ -301,36 +325,58 @@ OverlayCorner.Parent = Overlay
 --========================================================--
 
 local TopBar = Instance.new("Frame")
+
 TopBar.Name = "TopBar"
 TopBar.Size = UDim2.new(1, 0, 0, 62)
+
 TopBar.BackgroundTransparency = 1
 TopBar.Active = true
 TopBar.ZIndex = 20
 TopBar.Parent = Main
 
 local Title = Instance.new("TextLabel")
-Title.Size = UDim2.new(1, -60, 0, 35)
-Title.Position = UDim2.new(0, 12, 0, 3)
+
+Title.Size =
+UDim2.new(1, -60, 0, 35)
+
+Title.Position =
+UDim2.new(0, 12, 0, 3)
+
 Title.BackgroundTransparency = 1
 Title.Text = "🧱Backrooms morphs"
-Title.TextColor3 = Color3.fromRGB(255, 255, 255)
+
+Title.TextColor3 =
+Color3.fromRGB(255, 255, 255)
+
 Title.TextSize = 22
 Title.Font = Enum.Font.SciFi
-Title.TextXAlignment = Enum.TextXAlignment.Left
-Title.Active = false
+
+Title.TextXAlignment =
+Enum.TextXAlignment.Left
+
 Title.ZIndex = 21
 Title.Parent = TopBar
 
 local SubTitle = Instance.new("TextLabel")
-SubTitle.Size = UDim2.new(1, -60, 0, 25)
-SubTitle.Position = UDim2.new(0, 13, 0, 34)
+
+SubTitle.Size =
+UDim2.new(1, -60, 0, 25)
+
+SubTitle.Position =
+UDim2.new(0, 13, 0, 34)
+
 SubTitle.BackgroundTransparency = 1
 SubTitle.Text = "Script 2026❗️"
-SubTitle.TextColor3 = Color3.fromRGB(255, 255, 255)
+
+SubTitle.TextColor3 =
+Color3.fromRGB(255, 255, 255)
+
 SubTitle.TextSize = 15
 SubTitle.Font = Enum.Font.SciFi
-SubTitle.TextXAlignment = Enum.TextXAlignment.Left
-SubTitle.Active = false
+
+SubTitle.TextXAlignment =
+Enum.TextXAlignment.Left
+
 SubTitle.ZIndex = 21
 SubTitle.Parent = TopBar
 
@@ -339,16 +385,29 @@ SubTitle.Parent = TopBar
 --========================================================--
 
 local Close = Instance.new("TextButton")
+
 Close.Name = "Close"
-Close.Size = UDim2.new(0, 36, 0, 34)
-Close.Position = UDim2.new(1, -43, 0, 7)
-Close.BackgroundColor3 = Color3.fromRGB(220, 45, 45)
+
+Close.Size =
+UDim2.new(0, 36, 0, 34)
+
+Close.Position =
+UDim2.new(1, -43, 0, 7)
+
+Close.BackgroundColor3 =
+Color3.fromRGB(220, 45, 45)
+
 Close.BackgroundTransparency = 0.18
 Close.BorderSizePixel = 0
+
 Close.Text = "X"
-Close.TextColor3 = Color3.fromRGB(255, 255, 255)
+
+Close.TextColor3 =
+Color3.fromRGB(255, 255, 255)
+
 Close.TextSize = 20
 Close.Font = Enum.Font.SciFi
+
 Close.AutoButtonColor = false
 Close.ZIndex = 22
 Close.Parent = TopBar
@@ -363,34 +422,64 @@ CloseStroke.Thickness = 1.5
 CloseStroke.Parent = Close
 
 --========================================================--
--- LISTA ROLÁVEL
+-- LISTA
 --========================================================--
 
 local Scroll = Instance.new("ScrollingFrame")
+
 Scroll.Name = "CoordinateList"
-Scroll.Size = UDim2.new(1, -20, 1, -185)
-Scroll.Position = UDim2.new(0, 10, 0, 68)
+
+Scroll.Size =
+UDim2.new(1, -20, 1, -185)
+
+Scroll.Position =
+UDim2.new(0, 10, 0, 68)
+
 Scroll.BackgroundTransparency = 1
 Scroll.BorderSizePixel = 0
+
 Scroll.ScrollBarThickness = 5
-Scroll.ScrollBarImageColor3 = Color3.fromRGB(255, 255, 255)
-Scroll.AutomaticCanvasSize = Enum.AutomaticSize.Y
-Scroll.ScrollingDirection = Enum.ScrollingDirection.Y
+
+Scroll.ScrollBarImageColor3 =
+Color3.fromRGB(255, 255, 255)
+
+Scroll.AutomaticCanvasSize =
+Enum.AutomaticSize.Y
+
+Scroll.ScrollingDirection =
+Enum.ScrollingDirection.Y
+
 Scroll.Active = true
 Scroll.ZIndex = 20
 Scroll.Parent = Main
 
 local Grid = Instance.new("UIGridLayout")
-Grid.CellSize = UDim2.new(0, 138, 0, 50)
-Grid.CellPadding = UDim2.new(0, 7, 0, 8)
-Grid.HorizontalAlignment = Enum.HorizontalAlignment.Center
-Grid.VerticalAlignment = Enum.VerticalAlignment.Top
-Grid.SortOrder = Enum.SortOrder.LayoutOrder
+
+Grid.CellSize =
+UDim2.new(0, 138, 0, 50)
+
+Grid.CellPadding =
+UDim2.new(0, 7, 0, 8)
+
+Grid.HorizontalAlignment =
+Enum.HorizontalAlignment.Center
+
+Grid.VerticalAlignment =
+Enum.VerticalAlignment.Top
+
+Grid.SortOrder =
+Enum.SortOrder.LayoutOrder
+
 Grid.Parent = Scroll
 
 local Padding = Instance.new("UIPadding")
-Padding.PaddingTop = UDim.new(0, 5)
-Padding.PaddingBottom = UDim.new(0, 12)
+
+Padding.PaddingTop =
+UDim.new(0, 5)
+
+Padding.PaddingBottom =
+UDim.new(0, 12)
+
 Padding.Parent = Scroll
 
 --========================================================--
@@ -399,269 +488,361 @@ Padding.Parent = Scroll
 
 local function PressEffect(Button)
 
-	local Scale = Instance.new("UIScale")
-	Scale.Name = "PressScale"
-	Scale.Scale = 1
-	Scale.Parent = Button
+local Scale = Instance.new("UIScale")  
 
-	local function PressDown()
+Scale.Name = "PressScale"  
+Scale.Scale = 1  
+Scale.Parent = Button  
 
-		TweenService:Create(
-			Scale,
-			TweenInfo.new(
-				0.07,
-				Enum.EasingStyle.Quad,
-				Enum.EasingDirection.Out
-			),
-			{Scale = 0.94}
-		):Play()
+local function Down()  
 
-	end
+	TweenService:Create(  
+		Scale,  
+		TweenInfo.new(  
+			0.07,  
+			Enum.EasingStyle.Quad,  
+			Enum.EasingDirection.Out  
+		),  
+		{  
+			Scale = 0.94  
+		}  
+	):Play()  
 
-	local function Release()
+end  
 
-		TweenService:Create(
-			Scale,
-			TweenInfo.new(
-				0.09,
-				Enum.EasingStyle.Back,
-				Enum.EasingDirection.Out
-			),
-			{Scale = 1}
-		):Play()
+local function Up()  
 
-	end
+	TweenService:Create(  
+		Scale,  
+		TweenInfo.new(  
+			0.09,  
+			Enum.EasingStyle.Back,  
+			Enum.EasingDirection.Out  
+		),  
+		{  
+			Scale = 1  
+		}  
+	):Play()  
 
-	Button.InputBegan:Connect(function(Input)
+end  
 
-		if Input.UserInputType == Enum.UserInputType.MouseButton1
-			or Input.UserInputType == Enum.UserInputType.Touch then
+Button.InputBegan:Connect(function(Input)  
 
-			PressDown()
+	if Input.UserInputType ==  
+		Enum.UserInputType.MouseButton1  
 
-		end
+		or Input.UserInputType ==  
+		Enum.UserInputType.Touch then  
 
-	end)
+		Down()  
 
-	Button.InputEnded:Connect(function(Input)
+	end  
 
-		if Input.UserInputType == Enum.UserInputType.MouseButton1
-			or Input.UserInputType == Enum.UserInputType.Touch then
+end)  
 
-			Release()
+Button.InputEnded:Connect(function(Input)  
 
-		end
+	if Input.UserInputType ==  
+		Enum.UserInputType.MouseButton1  
 
-	end)
+		or Input.UserInputType ==  
+		Enum.UserInputType.Touch then  
 
-	Button.MouseLeave:Connect(Release)
+		Up()  
+
+	end  
+
+end)  
+
+Button.MouseLeave:Connect(Up)
 
 end
 
 --========================================================--
--- ENCONTRAR PROMPT
+-- LOCALIZAR PARTE DO PROMPT
 --========================================================--
 
 local function GetPromptPart(Prompt)
 
-	if Prompt.Parent:IsA("Attachment") then
+if not Prompt or not Prompt.Parent then  
+	return nil  
+end  
 
-		local Parent = Prompt.Parent.Parent
+if Prompt.Parent:IsA("Attachment") then  
 
-		if Parent and Parent:IsA("BasePart") then
-			return Parent
-		end
+	local Parent =  
+		Prompt.Parent.Parent  
 
-	end
+	if Parent and  
+		Parent:IsA("BasePart") then  
 
-	if Prompt.Parent:IsA("BasePart") then
-		return Prompt.Parent
-	end
+		return Parent  
 
-	return nil
+	end  
+
+end  
+
+if Prompt.Parent:IsA("BasePart") then  
+	return Prompt.Parent  
+end  
+
+return nil
+
 end
 
 --========================================================--
--- AUTO-CLICK DO PROMPT
+-- INTERAÇÃO LOCAL
 --========================================================--
 
-local function AutoClickPrompt(Prompt)
+local function ActivatePrompt(Prompt)
 
-	if not Prompt then
-		return false
-	end
+if not Prompt then  
+	return false  
+end  
 
-	if not Prompt.Enabled then
-		return false
-	end
+if not Prompt.Parent then  
+	return false  
+end  
 
-	local Success = pcall(function()
+if not Prompt.Enabled then  
+	return false  
+end  
 
-		Prompt:InputHoldBegin()
+local OldLOS =  
+	Prompt.RequiresLineOfSight  
 
-		task.wait(
-			math.max(
-				Prompt.HoldDuration,
-				0.08
-			)
-		)
+local OldDistance =  
+	Prompt.MaxActivationDistance  
 
-		Prompt:InputHoldEnd()
+pcall(function()  
 
-	end)
+	Prompt.RequiresLineOfSight = false  
+	Prompt.MaxActivationDistance = 100000  
 
-	return Success
+end)  
+
+local Success = pcall(function()  
+
+	Prompt:InputHoldBegin()  
+
+	task.wait(  
+		math.max(  
+			Prompt.HoldDuration,  
+			0.08  
+		)  
+	)  
+
+	Prompt:InputHoldEnd()  
+
+end)  
+
+pcall(function()  
+
+	Prompt.RequiresLineOfSight =  
+		OldLOS  
+
+	Prompt.MaxActivationDistance =  
+		OldDistance  
+
+end)  
+
+return Success
+
 end
 
 --========================================================--
--- INTERAÇÃO PRÓXIMA
+-- ACHAR PROMPT MAIS PRÓXIMO
 --========================================================--
 
 local function ActivateNearbyPrompt(Root)
 
-	local ClosestPrompt = nil
-	local ClosestDistance = 12
+if not Root then  
+	return false  
+end  
 
-	for _, Object in ipairs(workspace:GetDescendants()) do
+local ClosestPrompt = nil  
+local ClosestDistance = 15  
 
-		if Object:IsA("ProximityPrompt")
-			and Object.Enabled then
+for _, Object in  
+	ipairs(workspace:GetDescendants()) do  
 
-			local Part = GetPromptPart(Object)
+	if Object:IsA("ProximityPrompt")  
+		and Object.Enabled then  
 
-			if Part then
+		local Part =  
+			GetPromptPart(Object)  
 
-				local Distance =
-					(Part.Position - Root.Position).Magnitude
+		if Part then  
 
-				if Distance <= ClosestDistance then
+			local Distance =  
+				(Part.Position -  
+				Root.Position).Magnitude  
 
-					ClosestDistance = Distance
-					ClosestPrompt = Object
+			if Distance <= ClosestDistance then  
 
-				end
+				ClosestDistance =  
+					Distance  
 
-			end
+				ClosestPrompt =  
+					Object  
 
-		end
+			end  
 
-	end
+		end  
 
-	if ClosestPrompt then
+	end  
 
-		AutoClickPrompt(ClosestPrompt)
+end  
 
-		return true
-	end
+if ClosestPrompt then  
 
-	return false
+	return ActivatePrompt(  
+		ClosestPrompt  
+	)  
+
+end  
+
+return false
+
 end
 
 --========================================================--
--- TELEPORTE INDIVIDUAL
+-- TELEPORTE + INTERAÇÃO
 --========================================================--
 
 local Busy = false
 
-local function TeleportAndInteract(X, Y, Z)
+local function TeleportAndInteract(
+X,
+Y,
+Z
+)
 
-	if Busy then
-		return
-	end
+if Busy then  
+	return  
+end  
 
-	local Character = Player.Character
+local Character =  
+	Player.Character  
 
-	if not Character then
-		return
-	end
+if not Character then  
+	return  
+end  
 
-	local Root =
-		Character:FindFirstChild("HumanoidRootPart")
+local Root =  
+	Character:FindFirstChild(  
+		"HumanoidRootPart"  
+	)  
 
-	if not Root then
-		return
-	end
+if not Root then  
+	return  
+end  
 
-	Busy = true
+Busy = true  
 
-	Root.CFrame =
-		CFrame.new(X, Y, Z)
+Root.CFrame =  
+	CFrame.new(X, Y, Z)  
 
-	task.wait(0.15)
+task.wait(0.15)  
 
-	Root.CFrame =
-		CFrame.new(Root.Position) *
-		CFrame.Angles(math.rad(-90), 0, 0)
+Root.CFrame =  
+	CFrame.new(Root.Position) *  
+	CFrame.Angles(  
+		math.rad(-90),  
+		0,  
+		0  
+	)  
 
-	task.wait(0.15)
+task.wait(0.15)  
 
-	-- AUTO-CLICK / PEGA SOZINHO
-	ActivateNearbyPrompt(Root)
+ActivateNearbyPrompt(Root)  
 
-	task.wait(0.25)
+task.wait(0.25)  
 
-	Busy = false
+Busy = false
 
 end
 
 --========================================================--
--- BOTÕES DOS TPs
+-- CRIAR BOTÕES
 --========================================================--
 
 for Index, Data in ipairs(Coordinates) do
 
-	local Button = Instance.new("TextButton")
+local Button =  
+	Instance.new("TextButton")  
 
-	Button.Name = "Coordinate_" .. Index
-	Button.LayoutOrder = Index
+Button.Name =  
+	"Coordinate_" .. Index  
 
-	Button.Size =
-		UDim2.new(0, 138, 0, 50)
+Button.LayoutOrder = Index  
 
-	Button.BackgroundColor3 =
-		Color3.fromRGB(255, 255, 255)
+Button.Size =  
+	UDim2.new(0, 138, 0, 50)  
 
-	Button.BackgroundTransparency = 0.65
-	Button.BorderSizePixel = 0
+Button.BackgroundColor3 =  
+	Color3.fromRGB(  
+		255,  
+		255,  
+		255  
+	)  
 
-	Button.Text = Data[1]
-	Button.TextColor3 =
-		Color3.fromRGB(20, 20, 20)
+Button.BackgroundTransparency = 0.65  
+Button.BorderSizePixel = 0  
 
-	Button.TextSize = 16
-	Button.Font = Enum.Font.SciFi
-	Button.TextWrapped = true
+Button.Text =  
+	Data[1]  
 
-	Button.AutoButtonColor = false
-	Button.Active = true
-	Button.Selectable = true
-	Button.ZIndex = 25
-	Button.Parent = Scroll
+Button.TextColor3 =  
+	Color3.fromRGB(  
+		20,  
+		20,  
+		20  
+	)  
 
-	local Corner = Instance.new("UICorner")
-	Corner.CornerRadius =
-		UDim.new(0, 8)
-	Corner.Parent = Button
+Button.TextSize = 16  
+Button.Font = Enum.Font.SciFi  
+Button.TextWrapped = true  
 
-	local Stroke = Instance.new("UIStroke")
-	Stroke.Color =
-		Color3.fromRGB(255, 255, 255)
+Button.AutoButtonColor = false  
+Button.Active = true  
+Button.Selectable = true  
+Button.ZIndex = 25  
+Button.Parent = Scroll  
 
-	Stroke.Thickness = 1.5
-	Stroke.Transparency = 0.05
-	Stroke.Parent = Button
+local Corner =  
+	Instance.new("UICorner")  
 
-	PressEffect(Button)
+Corner.CornerRadius =  
+	UDim.new(0, 8)  
 
-	Button.Activated:Connect(function()
+Corner.Parent = Button  
 
-		TeleportAndInteract(
-			Data[2],
-			Data[3],
-			Data[4]
-		)
+local Stroke =  
+	Instance.new("UIStroke")  
 
-	end)
+Stroke.Color =  
+	Color3.fromRGB(  
+		255,  
+		255,  
+		255  
+	)  
+
+Stroke.Thickness = 1.5  
+Stroke.Transparency = 0.05  
+Stroke.Parent = Button  
+
+PressEffect(Button)  
+
+Button.Activated:Connect(function()  
+
+	TeleportAndInteract(  
+		Data[2],  
+		Data[3],  
+		Data[4]  
+	)  
+
+end)
 
 end
 
@@ -669,96 +850,119 @@ end
 -- BOTÕES INFERIORES
 --========================================================--
 
-local Bottom = Instance.new("Frame")
+local Bottom =
+Instance.new("Frame")
+
 Bottom.Name = "BottomControls"
-Bottom.Size = UDim2.new(1, -20, 0, 50)
-Bottom.Position = UDim2.new(0, 10, 1, -82)
+
+Bottom.Size =
+UDim2.new(1, -20, 0, 50)
+
+Bottom.Position =
+UDim2.new(0, 10, 1, -82)
+
 Bottom.BackgroundTransparency = 1
 Bottom.ZIndex = 30
 Bottom.Parent = Main
 
-local BottomLayout = Instance.new("UIListLayout")
+local BottomLayout =
+Instance.new("UIListLayout")
+
 BottomLayout.FillDirection =
-	Enum.FillDirection.Horizontal
+Enum.FillDirection.Horizontal
 
 BottomLayout.HorizontalAlignment =
-	Enum.HorizontalAlignment.Center
+Enum.HorizontalAlignment.Center
 
 BottomLayout.VerticalAlignment =
-	Enum.VerticalAlignment.Center
+Enum.VerticalAlignment.Center
 
 BottomLayout.Padding =
-	UDim.new(0, 7)
+UDim.new(0, 7)
 
 BottomLayout.Parent = Bottom
 
 --========================================================--
--- TROFÉIS ON/OFF
+-- TROFÉIS
 --========================================================--
 
 local TrophyOn = false
 
-local TrophyButton = Instance.new("TextButton")
+local TrophyButton =
+Instance.new("TextButton")
 
-TrophyButton.Name = "TrophyButton"
+TrophyButton.Name =
+"TrophyButton"
+
 TrophyButton.Size =
-	UDim2.new(0, 138, 0, 50)
+UDim2.new(0, 138, 0, 50)
 
 TrophyButton.BackgroundColor3 =
-	Color3.fromRGB(255, 255, 255)
+Color3.fromRGB(255, 255, 255)
 
 TrophyButton.BackgroundTransparency = 0.65
 TrophyButton.BorderSizePixel = 0
 
 TrophyButton.Text =
-	"🏆 Troféis🏆 OFF"
+"🏆 Troféis🏆 OFF"
 
 TrophyButton.TextColor3 =
-	Color3.fromRGB(20, 20, 20)
+Color3.fromRGB(20, 20, 20)
 
 TrophyButton.TextSize = 13
 TrophyButton.Font = Enum.Font.SciFi
+
 TrophyButton.AutoButtonColor = false
 TrophyButton.ZIndex = 31
 TrophyButton.Parent = Bottom
 
-local TrophyCorner = Instance.new("UICorner")
-TrophyCorner.CornerRadius =
-	UDim.new(0, 8)
-TrophyCorner.Parent = TrophyButton
+local TrophyCorner =
+Instance.new("UICorner")
 
-local TrophyStroke = Instance.new("UIStroke")
+TrophyCorner.CornerRadius =
+UDim.new(0, 8)
+
+TrophyCorner.Parent =
+TrophyButton
+
+local TrophyStroke =
+Instance.new("UIStroke")
+
 TrophyStroke.Color =
-	Color3.fromRGB(255, 255, 255)
+Color3.fromRGB(255, 255, 255)
 
 TrophyStroke.Thickness = 1.5
-TrophyStroke.Parent = TrophyButton
+TrophyStroke.Parent =
+TrophyButton
 
 PressEffect(TrophyButton)
 
 --========================================================--
--- TP TODOS OS TROFÉUS
+-- TP TODOS
 --========================================================--
 
 local TeleportingAll = false
 
-local AllButton = Instance.new("TextButton")
+local AllButton =
+Instance.new("TextButton")
 
-AllButton.Name = "TeleportAllTrophies"
+AllButton.Name =
+"TeleportAllTrophies"
+
 AllButton.Size =
-	UDim2.new(0, 138, 0, 50)
+UDim2.new(0, 138, 0, 50)
 
 AllButton.BackgroundColor3 =
-	Color3.fromRGB(255, 255, 255)
+Color3.fromRGB(255, 255, 255)
 
 AllButton.BackgroundTransparency = 0.65
 AllButton.BorderSizePixel = 0
 
 AllButton.Text =
-	"🏆 TP TODOS OS TROFÉUS🏆"
+"🏆 TP TODOS OS TROFÉUS🏆"
 
 AllButton.TextColor3 =
-	Color3.fromRGB(20, 20, 20)
+Color3.fromRGB(20, 20, 20)
 
 AllButton.TextSize = 11
 AllButton.Font = Enum.Font.SciFi
@@ -769,17 +973,24 @@ AllButton.Active = true
 AllButton.ZIndex = 31
 AllButton.Parent = Bottom
 
-local AllCorner = Instance.new("UICorner")
-AllCorner.CornerRadius =
-	UDim.new(0, 8)
-AllCorner.Parent = AllButton
+local AllCorner =
+Instance.new("UICorner")
 
-local AllStroke = Instance.new("UIStroke")
+AllCorner.CornerRadius =
+UDim.new(0, 8)
+
+AllCorner.Parent =
+AllButton
+
+local AllStroke =
+Instance.new("UIStroke")
+
 AllStroke.Color =
-	Color3.fromRGB(255, 255, 255)
+Color3.fromRGB(255, 255, 255)
 
 AllStroke.Thickness = 1.5
-AllStroke.Parent = AllButton
+AllStroke.Parent =
+AllButton
 
 PressEffect(AllButton)
 
@@ -789,293 +1000,305 @@ PressEffect(AllButton)
 
 local function GetAllPrompts()
 
-	local List = {}
+local List = {}  
 
-	for _, Object in ipairs(workspace:GetDescendants()) do
+for _, Object in  
+	ipairs(workspace:GetDescendants()) do  
 
-		if Object:IsA("ProximityPrompt")
-			and Object.Enabled then
+	if Object:IsA("ProximityPrompt")  
+		and Object.Enabled then  
 
-			local Part =
-				GetPromptPart(Object)
+		local Part =  
+			GetPromptPart(Object)  
 
-			if Part then
+		if Part then  
 
-				table.insert(
-					List,
-					{
-						Prompt = Object,
-						Part = Part
-					}
-				)
+			table.insert(  
+				List,  
+				{  
+					Prompt = Object,  
+					Part = Part  
+				}  
+			)  
 
-			end
+		end  
 
-		end
+	end  
 
-	end
+end  
 
-	return List
+return List
+
 end
 
 --========================================================--
--- TP TODOS + AUTO-CLICK
+-- TP TODOS OS TROFÉUS
 --========================================================--
 
 AllButton.Activated:Connect(function()
 
-	-- PARAR
-	if TeleportingAll then
+if TeleportingAll then  
 
-		TeleportingAll = false
+	TeleportingAll = false  
 
-		AllButton.Text =
-			"🏆 TP TODOS OS TROFÉUS🏆"
+	AllButton.Text =  
+		"🏆 TP TODOS OS TROFÉUS🏆"  
 
-		return
-	end
+	return  
+end  
 
-	-- INICIAR
-	TeleportingAll = true
+TeleportingAll = true  
 
-	AllButton.Text =
-		"⏳ TELEPORTANDO..."
+AllButton.Text =  
+	"⏳ TELEPORTANDO..."  
 
-	task.spawn(function()
+task.spawn(function()  
 
-		local Prompts =
-			GetAllPrompts()
+	local Prompts =  
+		GetAllPrompts()  
 
-		for _, Data in ipairs(Prompts) do
+	for _, Data in ipairs(Prompts) do  
 
-			-- PAROU
-			if not TeleportingAll then
-				break
-			end
+		if not TeleportingAll then  
+			break  
+		end  
 
-			local Character =
-				Player.Character
+		local Character =  
+			Player.Character  
 
-			local Root =
-				Character and
-				Character:FindFirstChild(
-					"HumanoidRootPart"
-				)
+		local Root =  
+			Character and  
+			Character:FindFirstChild(  
+				"HumanoidRootPart"  
+			)  
 
-			if not Root then
-				break
-			end
+		if not Root then  
+			break  
+		end  
 
-			-- TP
-			Root.CFrame =
-				Data.Part.CFrame *
-				CFrame.new(0, 3, 0)
+		Root.CFrame =  
+			Data.Part.CFrame *  
+			CFrame.new(0, 3, 0)  
 
-			task.wait(0.15)
+		task.wait(0.15)  
 
-			-- OLHA PARA BAIXO, IGUAL AOS TPs NORMAIS
-			Root.CFrame =
-				CFrame.new(Root.Position) *
-				CFrame.Angles(
-					math.rad(-90),
-					0,
-					0
-				)
+		Root.CFrame =  
+			CFrame.new(Root.Position) *  
+			CFrame.Angles(  
+				math.rad(-90),  
+				0,  
+				0  
+			)  
 
-			task.wait(0.15)
+		task.wait(0.15)  
 
-			-- AUTO-CLICK
-			if TeleportingAll then
+		if TeleportingAll then  
 
-				AutoClickPrompt(
-					Data.Prompt
-				)
+			ActivatePrompt(  
+				Data.Prompt  
+			)  
 
-			end
+		end  
 
-			task.wait(0.35)
+		task.wait(0.35)  
 
-		end
+	end  
 
-		TeleportingAll = false
+	TeleportingAll = false  
 
-		if AllButton.Parent then
+	if AllButton.Parent then  
 
-			AllButton.Text =
-				"🏆 TP TODOS OS TROFÉUS🏆"
+		AllButton.Text =  
+			"🏆 TP TODOS OS TROFÉUS🏆"  
 
-		end
+	end  
 
-	end)
+end)
 
 end)
 
 --========================================================--
--- INDICADORES
+-- INDICADORES DOS PROMPTS
 --========================================================--
 
-local TrophyFolder = Instance.new("Folder")
-TrophyFolder.Name = "PromptIndicators"
-TrophyFolder.Parent = Gui
+local PromptFolder =
+Instance.new("Folder")
+
+PromptFolder.Name =
+"PromptIndicators"
+
+PromptFolder.Parent =
+Gui
 
 local function CreateIndicator(Prompt)
 
-	local ID = Prompt:GetDebugId()
+local ID =  
+	Prompt:GetDebugId()  
 
-	if TrophyFolder:FindFirstChild(ID) then
-		return
-	end
+if PromptFolder:FindFirstChild(ID) then  
+	return  
+end  
 
-	local Part =
-		GetPromptPart(Prompt)
+local Part =  
+	GetPromptPart(Prompt)  
 
-	if not Part then
-		return
-	end
+if not Part then  
+	return  
+end  
 
-	local Billboard =
-		Instance.new("BillboardGui")
+local Billboard =  
+	Instance.new("BillboardGui")  
 
-	Billboard.Name = ID
-	Billboard.Adornee = Part
+Billboard.Name = ID  
+Billboard.Adornee = Part  
 
-	Billboard.Size =
-		UDim2.new(0, 150, 0, 45)
+Billboard.Size =  
+	UDim2.new(0, 150, 0, 45)  
 
-	Billboard.StudsOffset =
-		Vector3.new(0, 3, 0)
+Billboard.StudsOffset =  
+	Vector3.new(0, 3, 0)  
 
-	Billboard.AlwaysOnTop = true
-	Billboard.MaxDistance = math.huge
-	Billboard.Parent = TrophyFolder
+Billboard.AlwaysOnTop = true  
+Billboard.MaxDistance = math.huge  
+Billboard.Parent =  
+	PromptFolder  
 
-	local Label =
-		Instance.new("TextLabel")
+local Label =  
+	Instance.new("TextLabel")  
 
-	Label.Size =
-		UDim2.new(1, 0, 1, 0)
+Label.Size =  
+	UDim2.new(1, 0, 1, 0)  
 
-	Label.BackgroundColor3 =
-		Color3.fromRGB(20, 20, 20)
+Label.BackgroundColor3 =  
+	Color3.fromRGB(20, 20, 20)  
 
-	Label.BackgroundTransparency = 0.25
+Label.BackgroundTransparency = 0.25  
 
-	Label.TextColor3 =
-		Color3.fromRGB(255, 255, 255)
+Label.TextColor3 =  
+	Color3.fromRGB(255, 255, 255)  
 
-	Label.TextSize = 17
-	Label.Font = Enum.Font.SciFi
-	Label.TextStrokeTransparency = 0
-	Label.Text = "E • 0m"
-	Label.Parent = Billboard
+Label.TextSize = 17  
+Label.Font = Enum.Font.SciFi  
+Label.TextStrokeTransparency = 0  
 
-	local Corner =
-		Instance.new("UICorner")
+Label.Text = "E • 0m"  
+Label.Parent = Billboard  
 
-	Corner.CornerRadius =
-		UDim.new(0, 8)
+local Corner =  
+	Instance.new("UICorner")  
 
-	Corner.Parent = Label
+Corner.CornerRadius =  
+	UDim.new(0, 8)  
 
-	local Stroke =
-		Instance.new("UIStroke")
+Corner.Parent = Label  
 
-	Stroke.Color =
-		Color3.fromRGB(255, 255, 255)
+local Stroke =  
+	Instance.new("UIStroke")  
 
-	Stroke.Thickness = 1.5
-	Stroke.Parent = Label
+Stroke.Color =  
+	Color3.fromRGB(255, 255, 255)  
+
+Stroke.Thickness = 1.5  
+Stroke.Parent = Label
 
 end
 
+--========================================================--
+-- ATUALIZAR INDICADORES
+--========================================================--
+
 local function UpdateIndicators()
 
-	if not TrophyOn then
+if not TrophyOn then  
 
-		for _, Object in
-			ipairs(TrophyFolder:GetChildren()) do
+	for _, Object in  
+		ipairs(PromptFolder:GetChildren()) do  
 
-			Object:Destroy()
+		Object:Destroy()  
 
-		end
+	end  
 
-		return
-	end
+	return  
+end  
 
-	local Existing = {}
+local Existing = {}  
 
-	for _, Object in
-		ipairs(workspace:GetDescendants()) do
+for _, Object in  
+	ipairs(workspace:GetDescendants()) do  
 
-		if Object:IsA("ProximityPrompt")
-			and Object.Enabled then
+	if Object:IsA("ProximityPrompt")  
+		and Object.Enabled then  
 
-			local ID =
-				Object:GetDebugId()
+		local ID =  
+			Object:GetDebugId()  
 
-			Existing[ID] = true
+		Existing[ID] = true  
 
-			CreateIndicator(Object)
+		pcall(function()  
+			Object.RequiresLineOfSight = false  
+		end)  
 
-			local Part =
-				GetPromptPart(Object)
+		CreateIndicator(Object)  
 
-			local Billboard =
-				TrophyFolder:FindFirstChild(ID)
+		local Part =  
+			GetPromptPart(Object)  
 
-			local Character =
-				Player.Character
+		local Billboard =  
+			PromptFolder:FindFirstChild(ID)  
 
-			local Root =
-				Character and
-				Character:FindFirstChild(
-					"HumanoidRootPart"
-				)
+		local Character =  
+			Player.Character  
 
-			if Part and Root and Billboard then
+		local Root =  
+			Character and  
+			Character:FindFirstChild(  
+				"HumanoidRootPart"  
+			)  
 
-				local Distance =
-					(Part.Position -
-					Root.Position).Magnitude
+		if Part and Root and Billboard then  
 
-				local Label =
-					Billboard:
-					FindFirstChildOfClass(
-						"TextLabel"
-					)
+			local Distance =  
+				(Part.Position -  
+				Root.Position).Magnitude  
 
-				if Label then
+			local Label =  
+				Billboard:  
+				FindFirstChildOfClass(  
+					"TextLabel"  
+				)  
 
-					local Icon
+			if Label then  
 
-					if UserInputService.TouchEnabled then
-						Icon = "🖐️"
-					else
-						Icon = "E"
-					end
+				local Icon  
 
-					Label.Text =
-						Icon ..
-						" • " ..
-						math.floor(Distance) ..
-						"m"
+				if UserInputService.TouchEnabled then  
+					Icon = "🖐️"  
+				else  
+					Icon = "E"  
+				end  
 
-				end
+				Label.Text =  
+					Icon ..  
+					" • " ..  
+					math.floor(Distance) ..  
+					"m"  
 
-			end
+			end  
 
-		end
+		end  
 
-	end
+	end  
 
-	for _, Object in
-		ipairs(TrophyFolder:GetChildren()) do
+end  
 
-		if not Existing[Object.Name] then
-			Object:Destroy()
-		end
+for _, Object in  
+	ipairs(PromptFolder:GetChildren()) do  
 
-	end
+	if not Existing[Object.Name] then  
+		Object:Destroy()  
+	end  
+
+end
 
 end
 
@@ -1085,61 +1308,63 @@ end
 
 TrophyButton.Activated:Connect(function()
 
-	TrophyOn = not TrophyOn
+TrophyOn =  
+	not TrophyOn  
 
-	if TrophyOn then
+if TrophyOn then  
 
-		TrophyButton.Text =
-			"🏆 Troféis🏆 ON"
+	TrophyButton.Text =  
+		"🏆 Troféis🏆 ON"  
 
-	else
+else  
 
-		TrophyButton.Text =
-			"🏆 Troféis🏆 OFF"
+	TrophyButton.Text =  
+		"🏆 Troféis🏆 OFF"  
 
-	end
+end  
 
-	UpdateIndicators()
+UpdateIndicators()
 
 end)
 
 --========================================================--
--- ATUALIZAÇÃO
+-- ATUALIZAÇÃO DOS INDICADORES
 --========================================================--
 
 local IndicatorConnection
 
 IndicatorConnection =
-	RunService.RenderStepped:Connect(function()
+RunService.RenderStepped:Connect(function()
 
-		if TrophyOn then
-			UpdateIndicators()
-		end
+if TrophyOn then  
+		UpdateIndicators()  
+	end  
 
-	end)
+end)
 
 --========================================================--
 -- ASSINATURA
 --========================================================--
 
 local Signature =
-	Instance.new("TextLabel")
+Instance.new("TextLabel")
 
-Signature.Name = "Signature"
+Signature.Name =
+"Signature"
 
 Signature.Size =
-	UDim2.new(1, -20, 0, 30)
+UDim2.new(1, -20, 0, 30)
 
 Signature.Position =
-	UDim2.new(0, 10, 1, -38)
+UDim2.new(0, 10, 1, -38)
 
 Signature.BackgroundTransparency = 1
 
 Signature.Text =
-	"🧱by henrique☢️"
+"🧱by henrique☢️"
 
 Signature.TextColor3 =
-	Color3.fromRGB(255, 255, 255)
+Color3.fromRGB(255, 255, 255)
 
 Signature.TextTransparency = 0.05
 
@@ -1147,73 +1372,10 @@ Signature.TextSize = 17
 Signature.Font = Enum.Font.SciFi
 
 Signature.TextXAlignment =
-	Enum.TextXAlignment.Right
+Enum.TextXAlignment.Right
 
-Signature.Active = false
 Signature.ZIndex = 25
 Signature.Parent = Main
-
---========================================================--
--- ARRASTAR GUI
---========================================================--
-
-local Dragging = false
-local DragStart
-local StartPosition
-
-TopBar.InputBegan:Connect(function(Input)
-
-	if Input.UserInputType ==
-		Enum.UserInputType.MouseButton1
-
-		or Input.UserInputType ==
-		Enum.UserInputType.Touch then
-
-		Dragging = true
-		DragStart = Input.Position
-		StartPosition = Main.Position
-
-		Input.Changed:Connect(function()
-
-			if Input.UserInputState ==
-				Enum.UserInputState.End then
-
-				Dragging = false
-
-			end
-
-		end)
-
-	end
-
-end)
-
-UserInputService.InputChanged:Connect(function(Input)
-
-	if not Dragging then
-		return
-	end
-
-	if Input.UserInputType ==
-		Enum.UserInputType.MouseMovement
-
-		or Input.UserInputType ==
-		Enum.UserInputType.Touch then
-
-		local Delta =
-			Input.Position - DragStart
-
-		Main.Position =
-			UDim2.new(
-				StartPosition.X.Scale,
-				StartPosition.X.Offset + Delta.X,
-				StartPosition.Y.Scale,
-				StartPosition.Y.Offset + Delta.Y
-			)
-
-	end
-
-end)
 
 --========================================================--
 -- FECHAR
@@ -1223,17 +1385,87 @@ PressEffect(Close)
 
 Close.Activated:Connect(function()
 
-	TeleportingAll = false
+TeleportingAll = false  
 
-	if IndicatorConnection then
-		IndicatorConnection:Disconnect()
-	end
+if IndicatorConnection then  
+	IndicatorConnection:Disconnect()  
+end  
 
-	TrophyFolder:Destroy()
-	Gui:Destroy()
+PromptFolder:Destroy()  
+Gui:Destroy()
 
 end)
 
 --========================================================--
--- FIM
+-- ARRASTAR
+--========================================================--
+
+local Dragging = false
+local DragStart
+local StartPosition
+
+TopBar.InputBegan:Connect(function(Input)
+
+if Input.UserInputType ==  
+	Enum.UserInputType.MouseButton1  
+
+	or Input.UserInputType ==  
+	Enum.UserInputType.Touch then  
+
+	Dragging = true  
+
+	DragStart =  
+		Input.Position  
+
+	StartPosition =  
+		Main.Position  
+
+	Input.Changed:Connect(function()  
+
+		if Input.UserInputState ==  
+			Enum.UserInputState.End then  
+
+			Dragging = false  
+
+		end  
+
+	end)  
+
+end
+
+end)
+
+UserInputService.InputChanged:Connect(function(Input)
+
+if not Dragging then  
+	return  
+end  
+
+if Input.UserInputType ==  
+	Enum.UserInputType.MouseMovement  
+
+	or Input.UserInputType ==  
+	Enum.UserInputType.Touch then  
+
+	local Delta =  
+		Input.Position -  
+		DragStart  
+
+	Main.Position =  
+		UDim2.new(  
+			StartPosition.X.Scale,  
+			StartPosition.X.Offset +  
+				Delta.X,  
+
+			StartPosition.Y.Scale,  
+			StartPosition.Y.Offset +  
+				Delta.Y  
+		)  
+
+end
+
+end)
+
+--========================================================--
+--                  🧱by henrique☢️
 --========================================================--
