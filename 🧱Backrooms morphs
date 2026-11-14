@@ -214,9 +214,16 @@ local Coordinates = {
     {"💣 TP TNT",
         -101.76, 29.63, -4.21},
 
-    -- NOVO BOTÃO: BESTA
+    -- BESTA
     {"🏹 TP BESTA",
         -113.47, 52.98, -145.14},
+
+    -- NOVOS ITENS
+    {"🎛️ TP ARQUIVO",
+        -127.94, 91.77, 30.15},
+
+    {"🔧 TP CHAVE DE FENDA",
+        -13.69, 61.79, 142.26},
 
 }
 
